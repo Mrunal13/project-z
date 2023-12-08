@@ -1,0 +1,96 @@
+.stepwrapper {
+  margin: 60px auto;
+}
+/* .step1wrapper {
+  margin: 40px 0;
+} */
+.maincard {
+  width: 600px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #fff; /* Add your desired background color */
+}
+
+.stepswrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Additional styling for a hover effect (optional) */
+.maincard:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.heading {
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+}
+
+.formwrapper label {
+  color: #000;
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 35px;
+  letter-spacing: 0;
+}
+
+.formwrapper textarea,
+.formwrapper input {
+  width: 100%;
+  padding: 8px;
+  /* margin-bottom: 12px; */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.btnnext {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btnprev {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btnprev:hover {
+  background-color: transparent;
+  border: 1px solid #dc3545;
+  color: #000;
+}
+.btnnext:hover {
+  background-color: transparent;
+  border: 1px solid #007bff;
+  color: #000;
+}
+/* 
+.formwrapper label > input[type="radio"] {
+  margin-right: 5px;
+}
+
+.formwrapper label > input[type="radio"] + span {
+  margin-right: 15px;
+} */
+ .error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+.btnwrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}

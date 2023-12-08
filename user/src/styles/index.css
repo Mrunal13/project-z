@@ -1,0 +1,32 @@
+.headerwrapper {
+  padding: 12px 0;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  background-color: #a5c926;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+}
+.navbar .logo {
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.navbar .menu ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: end;
+  gap: 20px;
+  margin-bottom: 0;
+  /* justify-content: space-evenly; */
+}
+.navbar .menu ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+}
+
