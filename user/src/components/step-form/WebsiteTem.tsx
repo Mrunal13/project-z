@@ -4,7 +4,7 @@ import { Formik, Form, Field } from "formik";
 // Import the color picker component
 import s from "./multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
-import { ChromePicker } from "react-color";
+import { BlockPicker, SketchPicker } from "react-color";
 import Select from "react-select";
 
 const WebsiteTemp = () => {
@@ -15,8 +15,13 @@ const WebsiteTemp = () => {
   const [selectedPageOptions, setSelectedPageOptions] = useState(
     layoutDetails?.selectedPages
   );
-  const [colorPickerVisible, setColorPickerVisible] = useState(false);
-  const [currentColorIndex, setCurrentColorIndex] = useState(null);
+
+  const [sketchPickerColor1, setSketchPickerColor1] = useState("#37d67a");
+  const [sketchPickerColor2, setSketchPickerColor2] = useState("#ff8a65");
+  // destructuring rgba from state
+  // const { r, g, b, a } = sketchPickerColor;
+  // const [blockPickerColor1, setBlockPickerColor1] = useState("#37d67a");
+  // const [blockPickerColor2, setBlockPickerColor2] = useState("#ff8a65");
 
   // useEffect(() => {
   //   setSelectedPageOptions(layoutDetails?.selectedPages);
@@ -32,11 +37,11 @@ const WebsiteTemp = () => {
   //     setFieldValue("selectedPages", [selected[0].value]);
   //   }
   // };
-  const handleColorChange = (color: any, index: any, setFieldValue: any) => {
-    // Handle color change and update the form values
-    // Update the color at the current index
-    setFieldValue(`colorCodes[${currentColorIndex}]`, color.hex);
-  };
+  // const handleColorChange = (color: any, index: any, setFieldValue: any) => {
+  //   // Handle color change and update the form values
+  //   // Update the color at the current index
+  //   setFieldValue(`colorCodes[${currentColorIndex}]`, color.hex);
+  // };
 
   const handleSelectChange = (selected: any, setFieldValue: any) => {
     const selectedValues = selected
@@ -83,37 +88,55 @@ const WebsiteTemp = () => {
                   }
                 />
               </div>
-              {/* <div>
-                <label>Choose Color Codes:</label>
-                {layoutDetails?.colorCodes?.map((color: any, index: any) => (
-                  <div key={index} className={s.colorPickerContainer}>
+              <div className="row">
+                <div className="blockpicker col-md-6 col-sm-12">
+                  {/* <label>Choose Color Codes For the Webs:</label> */}
+                  <label>Select Webiste primary Color</label>
+                  {/* Div to display the color  */}
+                  <div className="sketchpicker">
+                    {/* Div to display the color  */}
                     <div
-                      className={s.colorBox}
-                      style={{ backgroundColor: color }}
-                      onClick={() => {
-                        setCurrentColorIndex(index);
-                        setColorPickerVisible(true);
+                      style={{
+                        backgroundColor: `${sketchPickerColor1}`,
+                        width: 100,
+                        height: 50,
+                        border: "2px solid white",
                       }}
-                    >
-                      hello
-                    </div>
-                    {colorPickerVisible && currentColorIndex === index && (
-                      <div className={s.colorPickerPopover}>
-                        <div
-                          className={s.colorPickerCover}
-                          onClick={() => setColorPickerVisible(false)}
-                        />
-                        <ChromePicker
-                          // color={color}
-                          onChange={(color) =>
-                            handleColorChange(color, index, setFieldValue)
-                          }
-                        />
-                      </div>
-                    )}
+                    ></div>
+                    {/* Sketch Picker from react-color and handling color on onChange event */}
+                    <SketchPicker
+                      color={sketchPickerColor1}
+                      onChange={(color) => {
+                        setSketchPickerColor1(color.hex);
+                      }}
+                    />
                   </div>
-                ))}
-              </div> */}
+                </div>
+                <div className="blockpicker col-md-6 col-sm-12">
+                  {/* <label>Choose Color Codes For the Webs:</label> */}
+                  <label>Select Webiste primary Color</label>
+                  {/* Div to display the color  */}
+                  <div className="sketchpicker">
+                    {/* Div to display the color  */}
+                    <div
+                      style={{
+                        backgroundColor: `${sketchPickerColor2}`,
+                        width: 100,
+                        height: 50,
+                        border: "2px solid white",
+                      }}
+                    ></div>
+                    {/* Sketch Picker from react-color and handling color on onChange event */}
+                    <SketchPicker
+                      color={sketchPickerColor2}
+                      onChange={(color) => {
+                        setSketchPickerColor2(color.hex);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className={s.btnwrapper}>
                 <button className={`${s.btnprev} mt-4`} onClick={prev}>
                   Back
