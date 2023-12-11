@@ -6,7 +6,6 @@ import MultiStepFormContext from "@/provider/MultiStepForm";
 
 const validationSchema = Yup.object().shape({
   isdomain: Yup.string().required("Please select whether to include an domain"),
-
   domainName: Yup.string().when("isdomain", {
     is: (value: any) => value === "no",
     then: (schema) => schema.required("Please Enter Domain Name"),
@@ -54,29 +53,40 @@ const Domain = () => {
             <Form onSubmit={handleSubmit} className={s.formwrapper}>
               <div className={s.heading}>Domain Details</div>
               <label htmlFor="">Do you have Domain ?</label>
-              <div className="formgroup">
-                <label htmlFor="isdomain">
-                  yes
-                  <Field
-                    type="radio"
-                    name="isdomain"
-                    value="yes"
-                    onChange={handleChange}
-                    onClick={() => {
-                      setFieldValue("domainName", "");
-                    }}
-                  ></Field>
-                </label>
-                <label htmlFor="isdomain">
-                  no
-                  <Field
-                    type="radio"
-                    name="isdomain"
-                    value="no"
-                    onChange={handleChange}
-                  ></Field>
-                </label>
+              <div>
+                <span className={s.radiogroup}>
+                  <label>
+                    <Field
+                      type="radio"
+                      name="isdomain"
+                      value="yes"
+                      onChange={handleChange}
+                      onClick={() => {
+                        setFieldValue("domainName", "");
+                      }}
+                    />
+                    {/* <span className={s.customradio}></span> */}
+                    Yes
+                  </label>
+                  <label>
+                    <Field
+                      type="radio"
+                      name="isdomain"
+                      value="no"
+                      onChange={handleChange}
+                    />
+                    {/* <span className={s.customradio}></span> */}
+                    No
+                  </label>
+                </span>
+
+                <ErrorMessage
+                  name="includeBrandName"
+                  component="div"
+                  className={s.error}
+                />
               </div>
+
               {values.isdomain === "yes" && (
                 <div className={s.Domaindetails}>
                   You have already purchased the domain. If you need to make

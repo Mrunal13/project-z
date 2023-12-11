@@ -47,30 +47,55 @@ const Logo = () => {
           {(formikProps) => (
             <Form onSubmit={formikProps.handleSubmit}>
               <div className={s.formwrapper}>
-                <label>Do you have a logo</label>
-
-                <div className="formgroup">
-                  <label>
-                    <Field
-                      type="radio"
-                      name="includeImage"
-                      value="yes"
-                      onChange={formikProps.handleChange}
-                    />
-                    Yes
-                  </label>
-                  <label>
-                    <Field
-                      type="radio"
-                      name="includeImage"
-                      value="no"
-                      onChange={formikProps.handleChange}
-                      onClick={() => {
-                        formikProps.setFieldValue("selectedImage", "");
-                      }}
-                    />
-                    No
-                  </label>
+                <div>
+                  <label>Do you have a logo?</label>
+                  <span className={s.radiogroup}>
+                    <label>
+                      <Field
+                        type="radio"
+                        name="includeImage"
+                        value="yes"
+                        onChange={formikProps.handleChange}
+                      />
+                      {/* <span className={s.customradio}></span> */}
+                      Yes
+                    </label>
+                    <label>
+                      <Field
+                        type="radio"
+                        name="includeImage"
+                        value="no"
+                        onChange={formikProps.handleChange}
+                        onClick={() => {
+                          formikProps.setFieldValue("selectedImage", "");
+                        }}
+                      />
+                      {/* <span className={s.customradio}></span> */}
+                      No
+                    </label>
+                  </span>
+                  {formikProps.values.includeBrandName === "yes" && (
+                    <div>
+                      <label htmlFor="brandName">Brand Name</label>
+                      <input
+                        type="text"
+                        id="brandName"
+                        name="brandName"
+                        onChange={formikProps.handleChange}
+                        value={formikProps.values.brandName}
+                      />
+                      <ErrorMessage
+                        name="brandName"
+                        component="div"
+                        className={s.error}
+                      />
+                    </div>
+                  )}
+                  <ErrorMessage
+                    name="includeBrandName"
+                    component="div"
+                    className={s.error}
+                  />
                 </div>
                 <ErrorMessage
                   name="includeImage"

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import CreatableSelect from "react-select/creatable";
+import CreatableSelect, { components } from "react-select/creatable";
 import s from "./multiplestep.module.css";
 
 import MultiStepFormContext from "@/provider/MultiStepForm";
@@ -63,6 +63,7 @@ const Industry = () => {
       <div className={s.maincard}>
         <h6 className={s.heading}>Industry Details</h6>
         <Formik
+          enableReinitialize={true}
           initialValues={Industrydetails}
           validationSchema={validationSchema}
           onSubmit={(values) => {
@@ -80,7 +81,7 @@ const Industry = () => {
                 <label htmlFor="industryCategory">
                   Select OR Create Industry Category
                 </label>
-                <CreatableSelect
+                {/* <CreatableSelect
                   id="industryCategory"
                   name="industryCategory"
                   isClearable
@@ -100,7 +101,29 @@ const Industry = () => {
                       newValue?.name
                     );
                   }}
+                /> */}
+                <CreatableSelect
+                  id="industryCategory"
+                  name="industryCategory"
+                  isClearable
+                  options={category}
+                  value={category
+                    .flatMap((category: any) => category.options)
+                    .find(
+                      (option: any) =>
+                        option?.label === formikProps.values.industryCategory
+                    )}
+                  onCreateOption={(inputValue) =>
+                    handleCreate(inputValue, formikProps)
+                  }
+                  onChange={(newValue) => {
+                    formikProps.setFieldValue(
+                      "industryCategory",
+                      newValue?.label
+                    );
+                  }}
                 />
+
                 <ErrorMessage
                   name="industryCategory"
                   component="div"
@@ -142,31 +165,34 @@ const Industry = () => {
                     className={s.error}
                   />
                 </div>
+
                 <div>
                   <label>Include Brand Name?</label>
-                  <div>
+                  <span className={s.radiogroup}>
                     <label>
-                      Yes
                       <Field
                         type="radio"
                         name="includeBrandName"
                         value="yes"
                         onClick={() => setShowBrandNameInput(true)}
                       />
+                      {/* <span className={s.customradio}></span> */}
+                      Yes
                     </label>
                     <label>
-                      No
                       <Field
                         type="radio"
                         name="includeBrandName"
                         value="no"
                         onClick={() => {
                           setShowBrandNameInput(false);
-                          formikProps.setFieldValue("brandName", ""); // Reset brandName when 'No' is selected
+                          formikProps.setFieldValue("brandName", "");
                         }}
                       />
+                      {/* <span className={s.customradio}></span> */}
+                      No
                     </label>
-                  </div>
+                  </span>
                   {formikProps.values.includeBrandName === "yes" && (
                     <div>
                       <label htmlFor="brandName">Brand Name</label>
@@ -190,7 +216,7 @@ const Industry = () => {
                     className={s.error}
                   />
                 </div>
-                <button className={`${s.btnnext} mt-2`} type="submit">
+                <button className={`${s.btnnext} `} type="submit">
                   Next
                 </button>
               </div>

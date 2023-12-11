@@ -1,48 +1,59 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 // import { ChromePicker } from "react-color";
 // Import the color picker component
 import s from "./multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 import { BlockPicker, SketchPicker } from "react-color";
 import Select from "react-select";
+import * as Yup from "yup";
+import Image from "next/image";
 
 const WebsiteTemp = () => {
-  const { next, prev, PageOption, layoutDetails, setLayoutdetails }: any =
-    useContext(MultiStepFormContext);
+  const {
+    next,
+    prev,
+    PageOption,
+    layoutDetails,
+    setLayoutdetails,
+    Layoutoption,
+  }: any = useContext(MultiStepFormContext);
   console.log("layoutDetails1", layoutDetails);
+  const validationSchema = Yup.object().shape({
+    selectedPages: Yup.array().min(1, "Select at least one page").required(),
+    selectedLayouts: Yup.array().min(1, "Select a layout").required(),
+  });
 
   const [selectedPageOptions, setSelectedPageOptions] = useState(
     layoutDetails?.selectedPages
   );
+  const [sketchPickerColor1, setSketchPickerColor1] = useState(
+    layoutDetails?.colorCodes[0] || "#37d67a"
+  );
+  const [sketchPickerColor2, setSketchPickerColor2] = useState(
+    layoutDetails?.colorCodes[1] || "#ff8a65"
+  );
 
-  const [sketchPickerColor1, setSketchPickerColor1] = useState("#37d67a");
-  const [sketchPickerColor2, setSketchPickerColor2] = useState("#ff8a65");
-  // destructuring rgba from state
-  // const { r, g, b, a } = sketchPickerColor;
-  // const [blockPickerColor1, setBlockPickerColor1] = useState("#37d67a");
-  // const [blockPickerColor2, setBlockPickerColor2] = useState("#ff8a65");
+  const handleLayoutChange = (e: any, setFieldValue: any, values: any) => {
+    const layoutId = e.target.value;
 
-  // useEffect(() => {
-  //   setSelectedPageOptions(layoutDetails?.selectedPages);
-  // }, [layoutDetails?.selectedPages.length]);
-  // const handleSelectChange = (selected: any, setFieldValue: any) => {
-  //   console.log("selected", selected);
+    // Update the selected layout in state
+    setFieldValue("selectedLayouts", [layoutId]);
 
-  //   if (selected.length > 1) {
-  //     selected.map((newValue: any) => {
-  //       setFieldValue("selectedPages", [...newValue, newValue.value]);
-  //     });
-  //   } else {
-  //     setFieldValue("selectedPages", [selected[0].value]);
-  //   }
-  // };
-  // const handleColorChange = (color: any, index: any, setFieldValue: any) => {
-  //   // Handle color change and update the form values
-  //   // Update the color at the current index
-  //   setFieldValue(`colorCodes[${currentColorIndex}]`, color.hex);
-  // };
+    // Update layout details
+    setLayoutdetails({
+      ...layoutDetails,
+      selectedLayouts: [layoutId],
+    });
+  };
+  const handlesubmitlayout = (values: any) => {
+    setLayoutdetails({
+      ...layoutDetails,
+    });
+    console.log("values", values);
 
+    // next();
+  };
   const handleSelectChange = (selected: any, setFieldValue: any) => {
     const selectedValues = selected
       ? selected.map((option: any) => option.value)
@@ -57,20 +68,13 @@ const WebsiteTemp = () => {
         <div className={s.heading}>Website Layout</div>
         <Formik
           initialValues={layoutDetails}
-          onSubmit={(values) => {
-            setLayoutdetails({
-              ...layoutDetails,
-              selectedPages: selectedPageOptions,
-            });
-            console.log("values", values);
-
-            // next();
-          }}
+          onSubmit={handlesubmitlayout}
+          validationSchema={validationSchema}
         >
-          {({ setFieldValue, values }) => (
-            <Form className={s.formwrapper}>
+          {({ setFieldValue, values, handleChange }) => (
+            <Form>
               <div className="form-group">
-                <label>Select Page Option</label>
+                <label>Select Page </label>
                 <Select
                   key={JSON.stringify(PageOption)}
                   isMulti
@@ -87,14 +91,17 @@ const WebsiteTemp = () => {
                     handleSelectChange(selected, setFieldValue)
                   }
                 />
+                <ErrorMessage
+                  name="selectedPages"
+                  component="div"
+                  className={s.error}
+                />
               </div>
               <div className="row">
                 <div className="blockpicker col-md-6 col-sm-12">
                   {/* <label>Choose Color Codes For the Webs:</label> */}
-                  <label>Select Webiste primary Color</label>
-                  {/* Div to display the color  */}
+                  <label>Select Webiste Primary Color</label>
                   <div className="sketchpicker">
-                    {/* Div to display the color  */}
                     <div
                       style={{
                         backgroundColor: `${sketchPickerColor1}`,
@@ -108,13 +115,17 @@ const WebsiteTemp = () => {
                       color={sketchPickerColor1}
                       onChange={(color) => {
                         setSketchPickerColor1(color.hex);
+                        setLayoutdetails({
+                          ...layoutDetails,
+                          colorCodes: [sketchPickerColor1, sketchPickerColor2],
+                        });
                       }}
                     />
                   </div>
                 </div>
                 <div className="blockpicker col-md-6 col-sm-12">
                   {/* <label>Choose Color Codes For the Webs:</label> */}
-                  <label>Select Webiste primary Color</label>
+                  <label>Select Webiste Secondary Color</label>
                   {/* Div to display the color  */}
                   <div className="sketchpicker">
                     {/* Div to display the color  */}
@@ -131,22 +142,71 @@ const WebsiteTemp = () => {
                       color={sketchPickerColor2}
                       onChange={(color) => {
                         setSketchPickerColor2(color.hex);
+                        setLayoutdetails({
+                          ...layoutDetails,
+                          colorCodes: [sketchPickerColor1, sketchPickerColor2],
+                        });
                       }}
                     />
                   </div>
                 </div>
               </div>
+              {selectedPageOptions.length > 0 &&
+                sketchPickerColor1 &&
+                sketchPickerColor2 && (
+                  <>
+                    <label htmlFor="" className="mt-5">
+                      {" "}
+                      Select Webiste Layout
+                    </label>
+                    {/* <img src="/images/layout-one.webp" alt="" /> */}
+                    <div className="cont-bg">
+                      {/* <div className="cont-title">Checkbox</div> */}
+                      <div className="cont-main">
+                        {Layoutoption?.map((layout: any) => (
+                          <div key={layout.id} className="cont-checkbox">
+                            <Field
+                              type="radio"
+                              id={`myRadio-${layout.id}`}
+                              name="selectedLayouts"
+                              checked={values.selectedLayouts[0] === layout.id}
+                              value={layout.id}
+                              onChange={(e: any) =>
+                                handleLayoutChange(e, setFieldValue, values)
+                              }
+                            />
+                            <label htmlFor={`myRadio-${layout.id}`}>
+                              <Image
+                                src={layout.images}
+                                alt={`Layout ${layout.name}`}
+                                width={100}
+                                height={100}
+                              />
+                              <span className="cover-checkbox">
+                                <svg viewBox="0 0 12 10">
+                                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                </svg>
+                              </span>
+                              <div className="info">{layout.name}</div>
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <ErrorMessage
+                      name="selectedLayouts"
+                      component="div"
+                      className={s.error}
+                    />
+                  </>
+                )}
 
               <div className={s.btnwrapper}>
                 <button className={`${s.btnprev} mt-4`} onClick={prev}>
                   Back
                 </button>
-                <button
-                  className={`${s.btnnext} mt-4`}
-                  type="submit"
-                  // onClick={next}
-                >
-                  Next
+                <button className={`${s.btnnext} mt-4`} type="submit">
+                  Submit
                 </button>
               </div>
             </Form>
