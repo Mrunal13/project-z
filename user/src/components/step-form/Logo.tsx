@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ErrorMessage, Field, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import s from "./multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 import * as Yup from "yup";
@@ -45,10 +45,11 @@ const Logo = () => {
           }}
         >
           {(formikProps) => (
-            <form onSubmit={formikProps.handleSubmit}>
+            <Form onSubmit={formikProps.handleSubmit}>
               <div className={s.formwrapper}>
                 <label>Do you have a logo</label>
-                <div>
+
+                <div className="formgroup">
                   <label>
                     <Field
                       type="radio"
@@ -123,7 +124,7 @@ const Logo = () => {
                   Next
                 </button>
               </div>
-            </form>
+            </Form>
           )}
         </Formik>
       </div>

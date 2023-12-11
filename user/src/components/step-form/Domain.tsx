@@ -51,7 +51,7 @@ const Domain = () => {
             isSubmitting,
             setFieldValue,
           }) => (
-            <form onSubmit={handleSubmit} className={s.formwrapper}>
+            <Form onSubmit={handleSubmit} className={s.formwrapper}>
               <div className={s.heading}>Domain Details</div>
               <label htmlFor="">Do you have Domain ?</label>
               <div className="formgroup">
@@ -113,7 +113,7 @@ const Domain = () => {
                   Next
                 </button>
               </div>
-            </form>
+            </Form>
           )}
         </Formik>
       </div>

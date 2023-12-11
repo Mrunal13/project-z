@@ -28,9 +28,23 @@ const Domaindetails = {
   domainName: "",
 };
 
+const WebsiteLayoutDetails = {
+  selectedPages: [],
+  colorCodes: ["red", "purple", "yellow"], // Set default color codes
+  contactDetails: {
+    phone: "",
+    email: "",
+    address: "",
+  },
+  selectedLayouts: [],
+};
 export interface IndustryCategory {
   name: string;
   label: string;
+}
+export interface WebsitePageLayoutOption {
+  readonly value: string;
+  readonly label: string;
 }
 
 export const categoryOptions: IndustryCategory[] = [
@@ -38,6 +52,13 @@ export const categoryOptions: IndustryCategory[] = [
   { name: "Construction", label: "Construction" },
   { name: "Chemical industries", label: "Chemical industries" },
   { name: "Basic Metal Production", label: "Basic Metal Production" },
+];
+export const PageOption: readonly WebsitePageLayoutOption[] = [
+  { value: "Home", label: "Home" },
+  { value: "About Us", label: " About Us" },
+  { value: "Contact Us", label: "Contact Us" },
+  { value: "Services", label: "Services" },
+  { value: "Success Story", label: "Success Story" },
 ];
 
 const renderStep = (step: Number) => {
@@ -62,8 +83,10 @@ const MultiStepForm = () => {
   const [logo, setLogo] = useState(logodetails);
   const [category, SetCategory] = useState(categoryOptions);
   const [domain, setdomain] = useState(Domaindetails);
+  const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
+  console.log("layoutDetails0", layoutDetails);
 
-  console.log("logo", logo, Industrydetails, domain);
+  // console.log("logo", logo, Industrydetails, domain);
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -91,6 +114,9 @@ const MultiStepForm = () => {
         category,
         domain,
         setdomain,
+        PageOption,
+        layoutDetails,
+        setLayoutdetails,
       }}
     >
       <div className={s.stepwrapper}>

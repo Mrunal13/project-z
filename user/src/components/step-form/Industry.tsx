@@ -19,7 +19,7 @@ import MultiStepFormContext from "@/provider/MultiStepForm";
 // ];
 
 const validationSchema = Yup.object().shape({
-  industryCategory: Yup.string().required("Industry Category is required"),
+  industryCategory: Yup.mixed().required("Industry Category is required"),
   industryDescription: Yup.string()
     .required("Industry Description is required")
     .max(500, "Must be 500 characters or less"),
