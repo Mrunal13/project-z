@@ -77,14 +77,7 @@
   border: 2px solid var(--Primary);
   color: #000;
 }
-/* 
-.formwrapper label > input[type="radio"] {
-  margin-right: 5px;
-}
 
-.formwrapper label > input[type="radio"] + span {
-  margin-right: 15px;
-} */
 .error {
   width: 100%;
   margin-top: 0.25rem;
@@ -118,4 +111,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.layoutwrapper {
+  display: flex;
+  margin-top: 10px;
+}
+.layoutwrapper .boxes {
+  margin: 10px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+.addmorecontainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.addmore {
+  background-color: #007bff;
+  color: white; 
+  padding: 10px 15px; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  margin-top: 15px; 
+  transition: background-color 0.3s ease; 
+}
+.addmore:hover{
+  background-color: #0056b3;
 }

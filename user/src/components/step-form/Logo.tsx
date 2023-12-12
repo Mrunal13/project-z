@@ -107,7 +107,7 @@ const Logo = () => {
               {/* Conditionally render the image uploader based on the radio button value */}
               {formikProps.values.includeImage === "yes" && (
                 <div>
-                  <label htmlFor="imageInput">Upload Image:</label>
+                  <label htmlFor="imageInput">Upload Logo:</label>
                   <input
                     name="selectedImage"
                     type="file"
@@ -124,13 +124,14 @@ const Logo = () => {
                   {/* Display the selected image */}
                   {formikProps.values.selectedImage && (
                     <div>
-                      <p>Selected Image Preview:</p>
+                      <p>Selected Logo Preview:</p>
                       <img
                         src={URL.createObjectURL(
                           formikProps.values.selectedImage
                         )}
                         alt="Selected"
-                        style={{ maxWidth: "100%" }}
+                        width={70}
+                        height={70}
                       />
                     </div>
                   )}

@@ -1,31 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Formik, Field, ErrorMessage } from "formik";
+import { Formik, Field, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
-import CreatableSelect, { components } from "react-select/creatable";
+import CreatableSelect from "react-select/creatable";
 import s from "./multiplestep.module.css";
-
 import MultiStepFormContext from "@/provider/MultiStepForm";
-
-// export interface IndustryCategory {
-//   name: string;
-//   label: string;
-// }
-
-// export const categoryOptions: IndustryCategory[] = [
-//   { name: "Commerce", label: "Commerce" },
-//   { name: "Construction", label: "Construction" },
-//   { name: "Chemical industries", label: "Chemical industries" },
-//   { name: "Basic Metal Production", label: "Basic Metal Production" },
-// ];
 
 const validationSchema = Yup.object().shape({
   industryCategory: Yup.mixed().required("Industry Category is required"),
   industryDescription: Yup.string()
     .required("Industry Description is required")
-    .max(500, "Must be 500 characters or less"),
+    .max(150, "Must be 150 characters or less"),
   businessDescription: Yup.string()
     .required("Business Description is required")
-    .max(500, "Must be 500 characters or less"),
+    .max(150, "Must be 150 characters or less"),
   includeBrandName: Yup.string().required(
     "Please select whether to include Brand Name"
   ),
@@ -35,29 +22,54 @@ const validationSchema = Yup.object().shape({
       schema.required("Brand Name is required when including it"),
     otherwise: (schema) => schema,
   }),
+  // numberOfServices: Yup.number()
+  //   .required("Number of services is required")
+  //   .min(1, "Number of services must be at least 1"),
+  services: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required("Service Name is required"),
+    })
+  ),
 });
 const Industry = () => {
   const {
     Industrydetails,
     setIndustryDetails,
     next,
-    prev,
     SetCategory,
     category,
   }: any = useContext(MultiStepFormContext);
 
   const [showBrandNameInput, setShowBrandNameInput] = useState(false);
 
-  const handleCreate = async (inputValue: string, formikProps: any) => {
-    console.log("inputValue", inputValue);
-    SetCategory((prev: any) => [
-      ...prev,
-      { name: inputValue, label: inputValue },
-    ]);
-    formikProps.setFieldValue("industryCategory", inputValue);
-    console.log(category, "category");
-  };
+  const handleCreate = (inputValue: string, formikProps: any) => {
+    const otherIndex = category.findIndex((cat: any) => cat.isOther);
 
+    SetCategory((prev: any) =>
+      otherIndex !== -1
+        ? [
+            ...prev.slice(0, otherIndex),
+            {
+              ...prev[otherIndex],
+              options: [
+                ...prev[otherIndex].options,
+                { value: inputValue, label: inputValue },
+              ],
+            },
+            ...prev.slice(otherIndex + 1),
+          ]
+        : [
+            ...prev,
+            {
+              label: "Other",
+              options: [{ value: inputValue, label: inputValue }],
+              isOther: true,
+            },
+          ]
+    );
+
+    formikProps.setFieldValue("industryCategory", inputValue);
+  };
   return (
     <div className={`${s.stepswrapper} `}>
       <div className={s.maincard}>
@@ -69,7 +81,6 @@ const Industry = () => {
           onSubmit={(values) => {
             // You can handle form submission here
             setIndustryDetails(values);
-            next();
             console.log("values", values);
             // Call next() to proceed to the next step
             next();
@@ -81,27 +92,6 @@ const Industry = () => {
                 <label htmlFor="industryCategory">
                   Select OR Create Industry Category
                 </label>
-                {/* <CreatableSelect
-                  id="industryCategory"
-                  name="industryCategory"
-                  isClearable
-                  options={category}
-                  value={category.find(
-                    (option: any) =>
-                      option.name === formikProps.values.industryCategory
-                  )}
-                  onCreateOption={(inputValue) =>
-                    handleCreate(inputValue, formikProps)
-                  }
-                  onChange={(newValue) => {
-                    console.log("newValue", newValue);
-
-                    formikProps.setFieldValue(
-                      "industryCategory",
-                      newValue?.name
-                    );
-                  }}
-                /> */}
                 <CreatableSelect
                   id="industryCategory"
                   name="industryCategory"
@@ -129,19 +119,19 @@ const Industry = () => {
                   component="div"
                   className={s.error}
                 />
-
                 <div className={`${s.Description} form-group`}>
                   <label htmlFor="industryDescription">
                     Industry Description
                   </label>
                   <br />
-                  <textarea
+                  <Field
+                    as="textarea"
                     className="form-control"
                     id="industryDescription"
                     name="industryDescription"
                     onChange={formikProps.handleChange}
                     value={formikProps.values.industryDescription}
-                  ></textarea>
+                  ></Field>
                   <ErrorMessage
                     name="industryDescription"
                     component="div"
@@ -152,20 +142,76 @@ const Industry = () => {
                   <label htmlFor="businessDescription">
                     Business Description
                   </label>
-                  <textarea
+                  <Field
+                    as="textarea"
                     className="form-control"
                     id="businessDescription"
                     name="businessDescription"
                     onChange={formikProps.handleChange}
                     value={formikProps.values.businessDescription}
-                  ></textarea>
+                  ></Field>
                   <ErrorMessage
                     name="businessDescription"
                     component="div"
                     className={s.error}
                   />
                 </div>
+                <FieldArray name="services">
+                  {(arrayHelpers) => (
+                    <div>
+                      {formikProps.values.services &&
+                        formikProps.values.services.map((service, index) => (
+                          <div key={index}>
+                            <label htmlFor={`services.${index}.name`}>
+                              Service Name
+                            </label>
+                            <Field
+                              type="text"
+                              id={`services.${index}.name`}
+                              name={`services.${index}.name`}
+                              className="form-control"
+                            />
+                            <ErrorMessage
+                              name={`services.${index}.name`}
+                              component="div"
+                              className={s.error}
+                            />
 
+                            {index > 0 && (
+                              <button
+                                type="button"
+                                className={s.removeButton}
+                                onClick={() => {
+                                  arrayHelpers.remove(index);
+                                  formikProps.setFieldValue(
+                                    "numberOfServices",
+                                    formikProps.values.numberOfServices - 1
+                                  );
+                                }}
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      <div className={s.addmorecontainer}>
+                        <button
+                          className={s.addmore}
+                          type="button"
+                          onClick={() => {
+                            arrayHelpers.push({ name: "", description: "" });
+                            formikProps.setFieldValue(
+                              "numberOfServices",
+                              formikProps.values.numberOfServices + 1
+                            );
+                          }}
+                        >
+                          Add More Services
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
                 <div>
                   <label>Include Brand Name?</label>
                   <span className={s.radiogroup}>
@@ -216,6 +262,7 @@ const Industry = () => {
                     className={s.error}
                   />
                 </div>
+
                 <button className={`${s.btnnext} `} type="submit">
                   Next
                 </button>
