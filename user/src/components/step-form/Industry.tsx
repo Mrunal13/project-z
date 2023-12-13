@@ -160,46 +160,48 @@ const Industry = () => {
                   {(arrayHelpers) => (
                     <div>
                       {formikProps.values.services &&
-                        formikProps.values.services.map((service, index) => (
-                          <div key={index}>
-                            <label htmlFor={`services.${index}.name`}>
-                              Service Name
-                            </label>
-                            <Field
-                              type="text"
-                              id={`services.${index}.name`}
-                              name={`services.${index}.name`}
-                              className="form-control"
-                            />
-                            <ErrorMessage
-                              name={`services.${index}.name`}
-                              component="div"
-                              className={s.error}
-                            />
+                        formikProps.values.services.map(
+                          (service: any, index: number) => (
+                            <div key={index} className={s.servicesWrapper}>
+                              <label htmlFor={`services.${index}.name`}>
+                                Service Name
+                              </label>
+                              <Field
+                                type="text"
+                                id={`services.${index}.name`}
+                                name={`services.${index}.name`}
+                                className="form-control"
+                              />
+                              <ErrorMessage
+                                name={`services.${index}.name`}
+                                component="div"
+                                className={s.error}
+                              />
 
-                            {index > 0 && (
-                              <button
-                                type="button"
-                                className={s.removeButton}
-                                onClick={() => {
-                                  arrayHelpers.remove(index);
-                                  formikProps.setFieldValue(
-                                    "numberOfServices",
-                                    formikProps.values.numberOfServices - 1
-                                  );
-                                }}
-                              >
-                                Remove
-                              </button>
-                            )}
-                          </div>
-                        ))}
+                              {index > 0 && (
+                                <button
+                                  type="button"
+                                  className={s.removeButton}
+                                  onClick={() => {
+                                    arrayHelpers.remove(index);
+                                    formikProps.setFieldValue(
+                                      "numberOfServices",
+                                      formikProps.values.numberOfServices - 1
+                                    );
+                                  }}
+                                >
+                                  &#10006;
+                                </button>
+                              )}
+                            </div>
+                          )
+                        )}
                       <div className={s.addmorecontainer}>
                         <button
                           className={s.addmore}
                           type="button"
                           onClick={() => {
-                            arrayHelpers.push({ name: "", description: "" });
+                            arrayHelpers.push({ name: "" });
                             formikProps.setFieldValue(
                               "numberOfServices",
                               formikProps.values.numberOfServices + 1

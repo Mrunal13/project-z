@@ -122,21 +122,36 @@
   height: 100px;
   cursor: pointer;
 }
-.addmorecontainer{
+.addmorecontainer {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .addmore {
   background-color: #007bff;
-  color: white; 
-  padding: 10px 15px; 
-  border: none; 
-  border-radius: 5px; 
-  cursor: pointer; 
-  margin-top: 15px; 
-  transition: background-color 0.3s ease; 
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
 }
-.addmore:hover{
+.addmore:hover {
   background-color: #0056b3;
+}
+.servicesWrapper {
+  position: relative;
+}
+.removeButton {
+  position: absolute;
+  top: 34px;
+  right: -14px;
+  z-index: 100;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  /* color: #ff0000; */
+  border-radius: 50%; /* Make the button circular */
+  padding: 7px;
 }

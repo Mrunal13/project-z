@@ -8,6 +8,7 @@ import { BlockPicker, SketchPicker } from "react-color";
 import Select from "react-select";
 import * as Yup from "yup";
 import GradientBoxes from "./GradientBoxes";
+import Image from "next/image";
 
 const WebsiteTemp = () => {
   const {
@@ -18,7 +19,6 @@ const WebsiteTemp = () => {
     setLayoutdetails,
     Layoutoption,
   }: any = useContext(MultiStepFormContext);
-  console.log("layoutDetails1", layoutDetails);
   const validationSchema = Yup.object().shape({
     selectedPages: Yup.array().min(1, "Select at least one page").required(),
     selectedLayouts: Yup.array().min(1, "Select a layout").required(),
@@ -28,10 +28,10 @@ const WebsiteTemp = () => {
     layoutDetails?.selectedPages
   );
   const [sketchPickerColor1, setSketchPickerColor1] = useState(
-    layoutDetails?.colorCodes[0] || "#37d67a"
+    layoutDetails?.colorCodes[0]
   );
   const [sketchPickerColor2, setSketchPickerColor2] = useState(
-    layoutDetails?.colorCodes[1] || "#ff8a65"
+    layoutDetails?.colorCodes[1]
   );
   const [gradientColors, setGradientColors] = useState([]);
 
@@ -48,7 +48,6 @@ const WebsiteTemp = () => {
     });
   };
   const handlesubmitlayout = (values: any) => {
-    console.log("values", values);
     setLayoutdetails({
       ...layoutDetails,
     });
@@ -56,12 +55,12 @@ const WebsiteTemp = () => {
     next();
   };
   const handleSelectChange = (selected: any, setFieldValue: any) => {
-    const selectedValues = selected
-      ? selected.map((option: any) => option.value)
-      : [];
-    setSelectedPageOptions(selectedValues);
-    setLayoutdetails({ ...layoutDetails, selectedPages: selectedValues });
-    setFieldValue("selectedPages", selectedValues);
+    setSelectedPageOptions(selected);
+    setLayoutdetails((prevLayoutDetails: any) => ({
+      ...prevLayoutDetails,
+      selectedPages: selected || [],
+    }));
+    setFieldValue("selectedPages", selected || []);
   };
   return (
     <div className={s.stepswrapper}>
@@ -77,7 +76,7 @@ const WebsiteTemp = () => {
               <div className="form-group">
                 <label>Select Page </label>
                 <Select
-                  key={JSON.stringify(PageOption)}
+                  // key={JSON.stringify(PageOption)}
                   isMulti
                   isClearable
                   className="basic-multi-select"
@@ -85,12 +84,13 @@ const WebsiteTemp = () => {
                   options={PageOption}
                   name="selectedPages"
                   value={selectedPageOptions?.map((value: any) => ({
-                    value,
-                    label: value,
+                    value: value.value,
+                    label: value.value,
+                    id: value.id,
                   }))}
-                  onChange={(selected) =>
-                    handleSelectChange(selected, setFieldValue)
-                  }
+                  onChange={(selected) => {
+                    handleSelectChange(selected, setFieldValue);
+                  }}
                 />
                 <ErrorMessage
                   name="selectedPages"
@@ -157,12 +157,17 @@ const WebsiteTemp = () => {
                 layoutDetails?.selectedPages.map((pagename: any) => {
                   return (
                     <>
-                      <h5 className="mt-5">{pagename}</h5>
+                      <h5 className="mt-5">{pagename.label}</h5>
                       <GradientBoxes
-                        key={pagename}
+                        key={pagename.label}
                         primaryColor={sketchPickerColor1}
                         secondaryColor={sketchPickerColor2}
-                        pageName={pagename}
+                        pageName={pagename.value}
+                        pageId={pagename.id}
+                        values={values}
+                        // onColorSelect={(color, id) =>
+                        //   handleColorSelect(color, id)
+                        // }
                       />
                     </>
                   );

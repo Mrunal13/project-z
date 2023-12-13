@@ -28,7 +28,7 @@ const Domaindetails = {
 
 const WebsiteLayoutDetails = {
   selectedPages: [],
-  colorCodes: [], // Set default color codes
+  colorCodes: ["#37d67a", "#ff8a65"], // Set default color codes
   contactDetails: {
     phone: "",
     email: "",
@@ -40,6 +40,7 @@ const WebsiteLayoutDetails = {
 export interface WebsitePageLayoutOption {
   readonly value: string;
   readonly label: string;
+  readonly id: string;
 }
 export interface Layout {
   readonly id: string;
@@ -55,11 +56,11 @@ export const Layoutoption: Layout[] = [
 ];
 
 export const PageOption: readonly WebsitePageLayoutOption[] = [
-  { value: "Home", label: "Home" },
-  { value: "About Us", label: " About Us" },
-  { value: "Contact Us", label: "Contact Us" },
-  { value: "Services", label: "Services" },
-  { value: "Success Story", label: "Success Story" },
+  { value: "Home", label: "Home", id: "1" },
+  { value: "About Us", label: " About Us", id: "2" },
+  { value: "Contact Us", label: "Contact Us", id: "3" },
+  { value: "Services", label: "Services", id: "4" },
+  { value: "Success Story", label: "Success Story", id: "5" },
 ];
 
 const renderStep = (step: Number) => {
@@ -83,14 +84,12 @@ const MultiStepForm = () => {
   const [Industrydetails, setIndustryDetails] = useState(
     IndustrydetailsInitialState
   );
-  console.log("Industrydetails", Industrydetails);
   const [logo, setLogo] = useState(logodetails);
   const [category, SetCategory] = useState(categoryOptions);
   const [domain, setdomain] = useState(Domaindetails);
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
-  console.log("layoutDetails", layoutDetails);
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(4);
 
   const next = () => {
     if (currentStep === 4) {
