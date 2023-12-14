@@ -23,7 +23,7 @@ const logodetails = {
 };
 const Domaindetails = {
   isdomain: "",
-  domainName: "",
+  // domainName: "",
 };
 
 const WebsiteLayoutDetails = {
@@ -87,9 +87,10 @@ const MultiStepForm = () => {
   const [logo, setLogo] = useState(logodetails);
   const [category, SetCategory] = useState(categoryOptions);
   const [domain, setdomain] = useState(Domaindetails);
+  
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
 
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const next = () => {
     if (currentStep === 4) {

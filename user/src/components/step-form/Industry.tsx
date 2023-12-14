@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import CreatableSelect from "react-select/creatable";
 import s from "./multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
+import { MdCancel } from "react-icons/md";
 
 const validationSchema = Yup.object().shape({
   industryCategory: Yup.mixed().required("Industry Category is required"),
@@ -81,7 +82,6 @@ const Industry = () => {
           onSubmit={(values) => {
             // You can handle form submission here
             setIndustryDetails(values);
-            console.log("values", values);
             // Call next() to proceed to the next step
             next();
           }}
@@ -190,7 +190,7 @@ const Industry = () => {
                                     );
                                   }}
                                 >
-                                  &#10006;
+                                  <MdCancel />
                                 </button>
                               )}
                             </div>

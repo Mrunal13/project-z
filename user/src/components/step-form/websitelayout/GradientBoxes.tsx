@@ -3,6 +3,7 @@ import s from "../multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 import Image from "next/image";
 import { Field } from "formik";
+import { FaCheck } from "react-icons/fa";
 
 // Updated interpolateColor function
 function interpolateColor(color1: any, color2: any, percentage: any) {
@@ -12,6 +13,7 @@ function interpolateColor(color1: any, color2: any, percentage: any) {
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
     const b = bigint & 255;
+    // const a = (bigint >> 12) & 255;
     return [r, g, b];
   };
 
@@ -21,6 +23,7 @@ function interpolateColor(color1: any, color2: any, percentage: any) {
   const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * percentage);
   const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * percentage);
   const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * percentage);
+  // const a = Math.round(rgb1[2] + (rgb2[3] - rgb1[3]) * percentage);
 
   return { color: `rgb(${r},${g},${b})`, percentage: percentage };
 }
@@ -39,8 +42,9 @@ const GradientBoxes = ({
 
   useEffect(() => {
     const colors: any = [];
+    const numColors = 5;
     for (let i = 0; i < 5; i++) {
-      const percentage = (i + 1) * 20; // Red and Blue have different random percentages
+      const percentage = (i + 1) * 20;
 
       // Customize the color generation based on the pageName, percentage, and direction
       let colorForPage = "";
@@ -91,6 +95,7 @@ const GradientBoxes = ({
   }, [primaryColor, secondaryColor, pageName]);
 
   const handleColorClick = (
+    colordetails: any,
     color: any,
     pageId: any,
     pageName: any,
@@ -105,7 +110,7 @@ const GradientBoxes = ({
         ...prevLayoutDetails,
         selectedLayouts: [
           ...updatedSelectedLayouts,
-          { color, pageId, pageName, pct },
+          { colordetails, color, pageId, pageName, pct },
         ],
       };
     });
@@ -113,11 +118,11 @@ const GradientBoxes = ({
 
   return (
     <>
-      <div className={`cont-bg`}>
+      <div className={s.layoutbg}>
         {gradientColors.map((colordetails: any, index) => {
           return (
             <>
-              <div key={colordetails?.PageId} className="cont-checkbox">
+              <div key={colordetails?.PageId} className={s.pagestemp}>
                 <Field
                   type="radio"
                   id={`myRadio-${colordetails?.PageId}`}
@@ -125,7 +130,7 @@ const GradientBoxes = ({
                   // value={colordetails?.PageId}
                   checked={
                     !!layoutDetails?.selectedLayouts?.find(
-                      (layout:any) =>
+                      (layout: any) =>
                         layout.color === colordetails?.colorForPage &&
                         layout.pageName === colordetails.PageName
                     )
@@ -144,6 +149,12 @@ const GradientBoxes = ({
                   }}
                   onClick={(e: any) =>
                     handleColorClick(
+                      getPageGradientStyle(
+                        pageName,
+                        primaryColor,
+                        secondaryColor,
+                        colordetails?.colorForPage
+                      ),
                       colordetails?.colorForPage,
                       colordetails?.PageId,
                       colordetails?.PageName,
@@ -169,10 +180,8 @@ const GradientBoxes = ({
                     //   )
                     // }
                   ></div>
-                  <span className="cover-checkbox">
-                    <svg viewBox="0 0 12 10">
-                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                    </svg>
+                  <span className={s.checkmark}>
+                    <FaCheck />
                   </span>
                 </label>
               </div>
@@ -199,7 +208,7 @@ function getPageGradientStyle(
       return `radial-gradient(circle, ${primaryColor}, ${color}, ${secondaryColor})`;
     // Add more cases for other pages...
     default:
-      return `linear-gradient(${primaryColor}, ${color}, ${secondaryColor})`;
+      return `linear-gradient(45deg , ${primaryColor}, ${color}, ${secondaryColor})`;
   }
 }
 

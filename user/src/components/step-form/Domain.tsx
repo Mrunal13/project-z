@@ -6,11 +6,11 @@ import MultiStepFormContext from "@/provider/MultiStepForm";
 
 const validationSchema = Yup.object().shape({
   isdomain: Yup.string().required("Please select whether to include an domain"),
-  domainName: Yup.string().when("isdomain", {
-    is: (value: any) => value === "no",
-    then: (schema) => schema.required("Please Enter Domain Name"),
-    otherwise: (schema) => schema,
-  }),
+  // domainName: Yup.string().when("isdomain", {
+  //   is: (value: any) => value === "no",
+  //   then: (schema) => schema.required("Please Enter Domain Name"),
+  //   otherwise: (schema) => schema,
+  // }),
 });
 const Domain = () => {
   const { next, prev, domain, setdomain }: any =
@@ -61,9 +61,9 @@ const Domain = () => {
                       name="isdomain"
                       value="yes"
                       onChange={handleChange}
-                      onClick={() => {
-                        setFieldValue("domainName", "");
-                      }}
+                      // onClick={() => {
+                      //   setFieldValue("domainName", "");
+                      // }}
                     />
                     {/* <span className={s.customradio}></span> */}
                     Yes
@@ -97,19 +97,22 @@ const Domain = () => {
                 </div>
               )}
               {values.isdomain === "no" && (
-                <div className="formgroup">
-                  <label htmlFor="">Enter the DomainName</label>
-                  <Field
-                    name="domainName"
-                    className="form-control"
-                    onChange={handleChange}
-                  ></Field>
-                  <ErrorMessage
-                    name="domainName"
-                    component="div"
-                    className={s.error}
-                  />
+                <div className={s.Domaindetails}>
+                  Api Request will be done here.
                 </div>
+                // <div className="formgroup">
+                //   <label htmlFor="">Enter the DomainName</label>
+                //   <Field
+                //     name="domainName"
+                //     className="form-control"
+                //     onChange={handleChange}
+                //   ></Field>
+                //   <ErrorMessage
+                //     name="domainName"
+                //     component="div"
+                //     className={s.error}
+                //   />
+                // </div>
               )}
               <div className={s.btnwrapper}>
                 <button className={`${s.btnprev} mt-4`} onClick={prev}>

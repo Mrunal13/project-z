@@ -19,10 +19,10 @@ const WebsiteTemp = () => {
     setLayoutdetails,
     Layoutoption,
   }: any = useContext(MultiStepFormContext);
-  const validationSchema = Yup.object().shape({
-    selectedPages: Yup.array().min(1, "Select at least one page").required(),
-    selectedLayouts: Yup.array().min(1, "Select a layout").required(),
-  });
+  // const validationSchema = Yup.object().shape({
+  //   selectedPages: Yup.array().min(1, "Select at least one page").required(),
+  //   selectedLayouts: Yup.array().min(1, "Select a layout").required(),
+  // });
 
   const [selectedPageOptions, setSelectedPageOptions] = useState(
     layoutDetails?.selectedPages
@@ -51,15 +51,30 @@ const WebsiteTemp = () => {
     setLayoutdetails({
       ...layoutDetails,
     });
+   
 
     next();
   };
   const handleSelectChange = (selected: any, setFieldValue: any) => {
+    // Get the array of previously selected pages
+    const prevSelectedPages = selectedPageOptions;
+
+    // Update the state with the newly selected pages
     setSelectedPageOptions(selected);
+
+    // Remove layouts associated with pages that are no longer selected
+    const updatedSelectedLayouts = layoutDetails.selectedLayouts.filter(
+      (layout: any) => selected.some((page: any) => page.id === layout.pageId)
+    );
+
+    // Update layout details
     setLayoutdetails((prevLayoutDetails: any) => ({
       ...prevLayoutDetails,
       selectedPages: selected || [],
+      selectedLayouts: updatedSelectedLayouts,
     }));
+
+    // Update the Formik field value
     setFieldValue("selectedPages", selected || []);
   };
   return (
@@ -69,10 +84,10 @@ const WebsiteTemp = () => {
         <Formik
           initialValues={layoutDetails}
           onSubmit={handlesubmitlayout}
-          validationSchema={validationSchema}
+          // validationSchema={validationSchema}
         >
           {({ setFieldValue, values, handleChange }) => (
-            <Form>
+            <Form className={s.formwrapper}>
               <div className="form-group">
                 <label>Select Page </label>
                 <Select
@@ -99,7 +114,7 @@ const WebsiteTemp = () => {
                 />
               </div>
               <div className="row">
-                <div className="blockpicker col-md-6 col-sm-12">
+                <div className="col-md-6 col-sm-12">
                   {/* <label>Choose Color Codes For the Webs:</label> */}
                   <label>Select Webiste Primary Color</label>
                   <div className="sketchpicker">
