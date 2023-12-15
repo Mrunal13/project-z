@@ -18,15 +18,10 @@ const validationSchema = Yup.object().shape({
 
 const Logo = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-  console.log("selectedImage", selectedImage);
-
   const { logo, setLogo, next, prev }: any = useContext(MultiStepFormContext);
-  // useEffect(() => {
-  //   setSelectedImage(logo?.selectedImage || null);
-  // }, [logo]);
-
   const handleImageChange = (e: any, formikProps: any) => {
     const file = e.target.files[0];
+
     if (file) {
       setSelectedImage(file);
       formikProps.setFieldValue("selectedImage", file);
@@ -39,7 +34,6 @@ const Logo = () => {
           initialValues={logo}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            console.log("values", values);
             setLogo(values);
             next();
           }}
@@ -102,53 +96,56 @@ const Logo = () => {
                   component="div"
                   className={s.error}
                 />
-              </div>
 
-              {/* Conditionally render the image uploader based on the radio button value */}
-              {formikProps.values.includeImage === "yes" && (
-                <div>
-                  <label htmlFor="imageInput">Upload Logo:</label>
-                  <input
-                    name="selectedImage"
-                    type="file"
-                    id="imageInput"
-                    accept="image/*"
-                    onChange={(e) => handleImageChange(e, formikProps)}
-                  />
-                  <ErrorMessage
-                    name="selectedImage"
-                    component="div"
-                    className={s.error}
-                  />
-
-                  {/* Display the selected image */}
-                  {formikProps.values.selectedImage && (
-                    <div>
-                      <p>Selected Logo Preview:</p>
-                      <img
-                        src={URL.createObjectURL(
-                          formikProps.values.selectedImage
-                        )}
-                        alt="Selected"
-                        width={70}
-                        height={70}
+                {/* Conditionally render the image uploader based on the radio button value */}
+                {formikProps.values.includeImage === "yes" && (
+                  <>
+                    <label> Upload Logo:</label>
+                    <label htmlFor="imageInput" className={s.uploadwrapper}>
+                      <input
+                        name="selectedImage"
+                        type="file"
+                        id="imageInput"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, formikProps)}
+                        style={{ display: "none" }}
                       />
-                    </div>
-                  )}
+                      <img src="/images/upload.png" alt="" />
+                    </label>
+                    <label htmlFor="">
+                      {formikProps?.values?.selectedImage?.name}
+                    </label>
+                    <ErrorMessage
+                      name="selectedImage"
+                      component="div"
+                      className={s.error}
+                    />
+                    {formikProps.values.selectedImage && (
+                      <div className={s.previewwrapper}>
+                        <label>Selected Logo Preview:</label>
+                        <img
+                          src={URL.createObjectURL(
+                            formikProps.values.selectedImage
+                          )}
+                          alt="Selected"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+                {/* Display the selected image */}
+                <div className={s.btnwrapper}>
+                  <button className={`${s.btnprev} mt-4`} onClick={prev}>
+                    Back
+                  </button>
+                  <button
+                    className={`${s.btnnext} mt-4`}
+                    type="submit"
+                    // onClick={next}
+                  >
+                    Next
+                  </button>
                 </div>
-              )}
-
-              <div className={s.btnwrapper}>
-                <button className={`${s.btnprev} mt-4`} onClick={prev}>
-                  Back
-                </button>
-                <button
-                  className={`${s.btnnext} mt-4`}
-                  type="submit"
-                  // onClick={next}
-                >
-                  Next
-                </button>
               </div>
             </Form>
           )}

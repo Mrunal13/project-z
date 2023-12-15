@@ -198,7 +198,7 @@ const Industry = () => {
                         )}
                       <div className={s.addmorecontainer}>
                         <button
-                          className={s.addmore}
+                          className={`${s.addmore} btn btn-primary`}
                           type="button"
                           onClick={() => {
                             arrayHelpers.push({ name: "" });

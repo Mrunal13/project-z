@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import Domain from "./Domain";
 import s from "./multiplestep.module.css";
 import WebsiteTemp from "./websitelayout/WebsiteTem";
-import { categoryOptions } from "./data";
+import { categoryOptions } from "./data"; 
 
 const IndustrydetailsInitialState = {
   industryCategory: "",
@@ -14,7 +14,7 @@ const IndustrydetailsInitialState = {
   businessDescription: "",
   includeBrandName: "",
   brandName: "",
-  numberOfServices: 1, // Initialize with 0 services
+  numberOfServices: 1,
   services: [{ name: "" }],
 };
 const logodetails = {
@@ -87,9 +87,7 @@ const MultiStepForm = () => {
   const [logo, setLogo] = useState(logodetails);
   const [category, SetCategory] = useState(categoryOptions);
   const [domain, setdomain] = useState(Domaindetails);
-  
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
-
   const [currentStep, setCurrentStep] = useState(0);
 
   const next = () => {
@@ -127,14 +125,8 @@ const MultiStepForm = () => {
     >
       <div className={s.stepwrapper}>
         <div className="container">
-          {/* <img src="/images/layout-one.webp" alt="" /> */}
-          <h5 className="text-center">Step {currentStep + 1}</h5>
+          <h5 className="text-center mb-1">Step {currentStep + 1}</h5>
           <p className="text-center">step {currentStep + 1} out of 5</p>
-          {/* <Steps current={currentStep}>
-        <Step title={"Fill in your details"} />
-        <Step title={"Address details"} />
-        <Step title={"Review and Save"} />
-      </Steps> */}
           <main>{renderStep(currentStep)}</main>
         </div>
       </div>

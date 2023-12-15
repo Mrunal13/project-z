@@ -32,7 +32,7 @@
 
 .formwrapper label {
   color: #000;
-  margin-top: 15px;
+  margin-top: 8px;
   font-size: 15px;
   font-weight: 500;
   line-height: 35px;
@@ -48,7 +48,29 @@
   border-radius: 4px;
   box-sizing: border-box;
 }
-
+.uploadwrapper {
+  display: grid;
+  width: 200px;
+  height: auto;
+  background-color: #ecf6ff75;
+  justify-content: center;
+  padding: 25px 30px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.uploadwrapper img {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+}
+.previewwrapper {
+  display: grid;
+}
+.previewwrapper img {
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+}
 .btnnext {
   background-color: var(--Primary);
   color: #fff;
@@ -128,25 +150,25 @@
   align-items: center;
 }
 .addmore {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
+  /* background-color: #007bff; */
+  /* color: white; */
+  /* padding: 10px 15px; */
+  /* border: none;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: pointer; */
   margin-top: 15px;
-  transition: background-color 0.3s ease;
+  /* transition: background-color 0.3s ease; */
 }
 .addmore:hover {
-  background-color: #0056b3;
+  /* background-color: #0056b3; */
 }
 .servicesWrapper {
   position: relative;
 }
 .removeButton {
   position: absolute;
-  top: 25px;
-  right: -16px;
+  top: 20px;
+  right: -15px;
   z-index: 100;
   border: none;
   cursor: pointer;

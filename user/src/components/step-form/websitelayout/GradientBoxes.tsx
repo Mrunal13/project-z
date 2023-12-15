@@ -1,9 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import s from "../multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 import Image from "next/image";
 import { Field } from "formik";
 import { FaCheck } from "react-icons/fa";
+
+interface ColorDetails {
+  colorForPage: string;
+  PageName: string;
+  PageId: string;
+  pct: number;
+}
 
 // Updated interpolateColor function
 function interpolateColor(color1: any, color2: any, percentage: any) {
@@ -13,7 +26,6 @@ function interpolateColor(color1: any, color2: any, percentage: any) {
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
     const b = bigint & 255;
-    // const a = (bigint >> 12) & 255;
     return [r, g, b];
   };
 
@@ -23,9 +35,27 @@ function interpolateColor(color1: any, color2: any, percentage: any) {
   const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * percentage);
   const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * percentage);
   const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * percentage);
-  // const a = Math.round(rgb1[2] + (rgb2[3] - rgb1[3]) * percentage);
-
   return { color: `rgb(${r},${g},${b})`, percentage: percentage };
+}
+function interpolateColorForPage(
+  pageName: any,
+  color1: any,
+  color2: any,
+  percentage: any
+) {
+  // Add conditions for different pages
+  switch (pageName) {
+    case "Home":
+      // Example: Different logic for "Home" page
+      return interpolateColor(color1, color2, Math.abs(percentage - 100) / 100);
+    case "About Us":
+      // Example: Different logic for "About Us" page
+      // You can add custom logic for other pages as well
+      return interpolateColor(color1, color2, percentage / 100);
+    default:
+      // Default logic for other pages
+      return interpolateColor(color1, color2, percentage / 100);
+  }
 }
 const GradientBoxes = ({
   primaryColor,
@@ -35,60 +65,31 @@ const GradientBoxes = ({
   values,
 }: any) => {
   const [gradientColors, setGradientColors] = useState([]);
-
   const [selectedColor, setSelectedColor] = useState(null);
   const { layoutDetails, setLayoutdetails }: any =
     useContext(MultiStepFormContext);
 
   useEffect(() => {
-    const colors: any = [];
-    const numColors = 5;
-    for (let i = 0; i < 5; i++) {
-      const percentage = (i + 1) * 20;
-
+    const colors: ColorDetails[] = [];
+    const numColors: number = 5;
+    const rotationIncrement = 360 / numColors;
+    for (let i = 0; i < numColors; i++) {
+      const percentage = (i + 1) * (100 / numColors);
+      const rotation = i * rotationIncrement;
       // Customize the color generation based on the pageName, percentage, and direction
-      let colorForPage = "";
-      let PageName = "";
-      let PageId = "";
-      let pct;
+      const { color, percentage: pct } = interpolateColorForPage(
+        pageName,
+        primaryColor,
+        secondaryColor,
+        percentage
+      );
 
-      if (pageName === "Home") {
-        // Example: Bottom to Top
-        const value = interpolateColor(
-          primaryColor,
-          secondaryColor,
-          percentage / 100
-        );
-        colorForPage = value.color;
-        pct = value.percentage;
-        PageName = pageName;
-        PageId = pageId;
-      } else if (pageName === "About Us") {
-        // Example: Left to Right
-        const value = interpolateColor(
-          primaryColor,
-          secondaryColor,
-          percentage / 100
-        );
-        colorForPage = value.color;
-        pct = value.percentage;
-        PageName = pageName;
-        PageId = pageId;
-      } else {
-        const value = interpolateColor(
-          primaryColor,
-          secondaryColor,
-          percentage / 100
-        );
-        colorForPage = value.color;
-        pct = value.percentage;
-        PageName = pageName;
-        PageId = pageId;
-      }
-
-      // Add more conditions for other pages...
-
-      colors.push({ colorForPage, PageName, PageId, pct });
+      colors.push({
+        colorForPage: color,
+        PageName: pageName,
+        PageId: pageId,
+        pct,
+      });
     }
 
     setGradientColors(colors);

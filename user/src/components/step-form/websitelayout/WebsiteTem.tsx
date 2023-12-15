@@ -51,8 +51,6 @@ const WebsiteTemp = () => {
     setLayoutdetails({
       ...layoutDetails,
     });
-   
-
     next();
   };
   const handleSelectChange = (selected: any, setFieldValue: any) => {
@@ -128,6 +126,7 @@ const WebsiteTemp = () => {
                     ></div>
                     {/* Sketch Picker from react-color and handling color on onChange event */}
                     <SketchPicker
+                      disableAlpha={false}
                       color={sketchPickerColor1}
                       onChange={(color) => {
                         setSketchPickerColor1(color.hex);
