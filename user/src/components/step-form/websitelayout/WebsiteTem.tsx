@@ -18,6 +18,7 @@ const WebsiteTemp = () => {
     layoutDetails,
     setLayoutdetails,
     Layoutoption,
+    Industrydetails,
   }: any = useContext(MultiStepFormContext);
   // const validationSchema = Yup.object().shape({
   //   selectedPages: Yup.array().min(1, "Select at least one page").required(),
@@ -27,32 +28,37 @@ const WebsiteTemp = () => {
   const [selectedPageOptions, setSelectedPageOptions] = useState(
     layoutDetails?.selectedPages
   );
-  const [sketchPickerColor1, setSketchPickerColor1] = useState(
-    layoutDetails?.colorCodes[0]
+  const [primaryColor, setPrimaryColor] = useState(
+    layoutDetails?.colorCodes[0].primaryColor
   );
-  const [sketchPickerColor2, setSketchPickerColor2] = useState(
-    layoutDetails?.colorCodes[1]
+  const [secondaryColor, setSecondaryColor] = useState(
+    layoutDetails?.colorCodes[0].secondaryColor
   );
   const [gradientColors, setGradientColors] = useState([]);
 
-  const handleLayoutChange = (e: any, setFieldValue: any, values: any) => {
-    const layoutId = e.target.value;
+  // const handleLayoutChange = (e: any, setFieldValue: any, values: any) => {
+  //   const layoutId = e.target.value;
 
-    // Update the selected layout in state
-    setFieldValue("selectedLayouts", [layoutId]);
+  //   // Update the selected layout in state
+  //   setFieldValue("selectedLayouts", [layoutId]);
 
-    // Update layout details
-    setLayoutdetails({
-      ...layoutDetails,
-      selectedLayouts: [layoutId],
-    });
-  };
+  //   // Update layout details
+  //   setLayoutdetails({
+  //     ...layoutDetails,
+  //     selectedLayouts: [layoutId],
+  //   });
+  // };
+
   const handlesubmitlayout = (values: any) => {
     setLayoutdetails({
       ...layoutDetails,
+      colorCodes: [primaryColor, secondaryColor],
     });
+    console.log("FinalvalueofLayoutPage", layoutDetails);
     next();
   };
+
+  // select the pages of website
   const handleSelectChange = (selected: any, setFieldValue: any) => {
     // Get the array of previously selected pages
     const prevSelectedPages = selectedPageOptions;
@@ -75,6 +81,35 @@ const WebsiteTemp = () => {
     // Update the Formik field value
     setFieldValue("selectedPages", selected || []);
   };
+
+  // handle Secondary Color event
+  const handleSecondaryColor = (color: any) => {
+    setSecondaryColor(color.hex);
+    setLayoutdetails({
+      ...layoutDetails,
+      colorCodes: [
+        {
+          primaryColor: primaryColor,
+          secondaryColor: color.hex,
+        },
+      ],
+      selectedLayouts: [],
+    });
+  };
+  //  handle primary Color event
+  const handlePrimaryColor = (color: any) => {
+    setPrimaryColor(color.hex);
+    setLayoutdetails({
+      ...layoutDetails,
+      colorCodes: [
+        {
+          primarycolor: color.hex,
+          secondaryColor: secondaryColor,
+        },
+      ],
+      selectedLayouts: [],
+    });
+  };
   return (
     <div className={s.stepswrapper}>
       <div className={s.maincard}>
@@ -89,7 +124,6 @@ const WebsiteTemp = () => {
               <div className="form-group">
                 <label>Select Page </label>
                 <Select
-                  // key={JSON.stringify(PageOption)}
                   isMulti
                   isClearable
                   className="basic-multi-select"
@@ -118,23 +152,17 @@ const WebsiteTemp = () => {
                   <div className="sketchpicker">
                     <div
                       style={{
-                        backgroundColor: `${sketchPickerColor1}`,
+                        backgroundColor: `${primaryColor}`,
                         width: 100,
                         height: 50,
                         border: "2px solid white",
                       }}
                     ></div>
-                    {/* Sketch Picker from react-color and handling color on onChange event */}
+                    {/* Sketch Picker from react-color and handling color on onChange event ||  for the primary color */}
                     <SketchPicker
                       disableAlpha={false}
-                      color={sketchPickerColor1}
-                      onChange={(color) => {
-                        setSketchPickerColor1(color.hex);
-                        setLayoutdetails({
-                          ...layoutDetails,
-                          colorCodes: [sketchPickerColor1, sketchPickerColor2],
-                        });
-                      }}
+                      color={primaryColor}
+                      onChange={(color) => handlePrimaryColor(color)}
                     />
                   </div>
                 </div>
@@ -146,22 +174,16 @@ const WebsiteTemp = () => {
                     {/* Div to display the color  */}
                     <div
                       style={{
-                        backgroundColor: `${sketchPickerColor2}`,
+                        backgroundColor: `${secondaryColor}`,
                         width: 100,
                         height: 50,
                         border: "2px solid white",
                       }}
                     ></div>
-                    {/* Sketch Picker from react-color and handling color on onChange event */}
+                    {/* Sketch Picker from react-color and handling color on onChange event  || for secondary color */}
                     <SketchPicker
-                      color={sketchPickerColor2}
-                      onChange={(color) => {
-                        setSketchPickerColor2(color.hex);
-                        setLayoutdetails({
-                          ...layoutDetails,
-                          colorCodes: [sketchPickerColor1, sketchPickerColor2],
-                        });
-                      }}
+                      color={secondaryColor}
+                      onChange={handleSecondaryColor}
                     />
                   </div>
                 </div>
@@ -174,11 +196,12 @@ const WebsiteTemp = () => {
                       <h5 className="mt-5">{pagename.label}</h5>
                       <GradientBoxes
                         key={pagename.label}
-                        primaryColor={sketchPickerColor1}
-                        secondaryColor={sketchPickerColor2}
+                        primaryColor={primaryColor}
+                        secondaryColor={secondaryColor}
                         pageName={pagename.value}
                         pageId={pagename.id}
                         values={values}
+                        setFieldValue={setFieldValue}
                         // onColorSelect={(color, id) =>
                         //   handleColorSelect(color, id)
                         // }

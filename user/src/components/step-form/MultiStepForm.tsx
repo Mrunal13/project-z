@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import Domain from "./Domain";
 import s from "./multiplestep.module.css";
 import WebsiteTemp from "./websitelayout/WebsiteTem";
-import { categoryOptions } from "./data"; 
+import { categoryOptions } from "./data";
 
 const IndustrydetailsInitialState = {
   industryCategory: "",
@@ -23,18 +23,12 @@ const logodetails = {
 };
 const Domaindetails = {
   isdomain: "",
-  // domainName: "",
 };
 
 const WebsiteLayoutDetails = {
-  selectedPages: [],
-  colorCodes: ["#37d67a", "#ff8a65"], // Set default color codes
-  contactDetails: {
-    phone: "",
-    email: "",
-    address: "",
-  },
-  selectedLayouts: [],
+  selectedPages: [], // set the selected pages.
+  colorCodes: [{ primaryColor: "#37d67a", secondaryColor: "#ff8a65" }], // Set default color codes.
+  selectedLayouts: [], //add the slected layout option.
 };
 
 export interface WebsitePageLayoutOption {
@@ -90,17 +84,19 @@ const MultiStepForm = () => {
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
   const [currentStep, setCurrentStep] = useState(0);
 
+  // handle the stepform move to next form
   const next = () => {
     if (currentStep === 4) {
       setCurrentStep(0);
       setIndustryDetails(IndustrydetailsInitialState);
       setLogo(logodetails);
       setdomain(Domaindetails);
-      setLayoutdetails(WebsiteLayoutDetails);
+      // setLayoutdetails(WebsiteLayoutDetails);
       return;
     }
     setCurrentStep(currentStep + 1);
   };
+  // move to prev step form
   const prev = () => setCurrentStep(currentStep - 1);
 
   return (

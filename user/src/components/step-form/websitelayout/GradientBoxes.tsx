@@ -18,7 +18,7 @@ interface ColorDetails {
   pct: number;
 }
 
-// Updated interpolateColor function
+//  interpolateColor function for get the rgb color.
 function interpolateColor(color1: any, color2: any, percentage: any) {
   const hex = (color: any) => {
     const str = color.replace(/^#/, "");
@@ -63,6 +63,7 @@ const GradientBoxes = ({
   pageName,
   pageId,
   values,
+  setFieldValue,
 }: any) => {
   const [gradientColors, setGradientColors] = useState([]);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -95,6 +96,7 @@ const GradientBoxes = ({
     setGradientColors(colors);
   }, [primaryColor, secondaryColor, pageName]);
 
+  // click event for the select the boxes data
   const handleColorClick = (
     colordetails: any,
     color: any,
@@ -107,6 +109,10 @@ const GradientBoxes = ({
         (layout: any) => layout.pageName !== pageName
       );
 
+      setFieldValue("selectedLayouts", [
+        ...updatedSelectedLayouts,
+        { colordetails, color, pageId, pageName, pct },
+      ]);
       return {
         ...prevLayoutDetails,
         selectedLayouts: [
@@ -163,24 +169,7 @@ const GradientBoxes = ({
                     )
                   }
                 >
-                  <div
-                    key={index}
-                    // style={{
-                    //   background: getPageGradientStyle(
-                    //     pageName,
-                    //     primaryColor,
-                    //     secondaryColor,
-                    //     colordetails?.colorForPage
-                    //   ),
-                    // }}
-                    // onClick={() =>
-                    //   handleColorClick(
-                    //     colordetails?.colorForPage,
-                    //     colordetails?.PageId,
-                    //     colordetails?.PageName
-                    //   )
-                    // }
-                  ></div>
+                  <div key={index}></div>
                   <span className={s.checkmark}>
                     <FaCheck />
                   </span>

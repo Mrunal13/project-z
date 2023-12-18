@@ -43,7 +43,8 @@ const Industry = () => {
 
   const [showBrandNameInput, setShowBrandNameInput] = useState(false);
 
-  const handleCreate = (inputValue: string, formikProps: any) => {
+  // handle click for the create the category.
+  const handleCategoryCreate = (inputValue: string, setFieldValue: any) => {
     const otherIndex = category.findIndex((cat: any) => cat.isOther);
 
     SetCategory((prev: any) =>
@@ -69,7 +70,52 @@ const Industry = () => {
           ]
     );
 
-    formikProps.setFieldValue("industryCategory", inputValue);
+    setFieldValue("industryCategory", inputValue);
+  };
+
+  //Handle submit industry form
+  const IndustryFormSubmit = (values: any) => {
+    // You can handle form submission here
+    setIndustryDetails(values);
+    // Call next() to proceed to the next step
+    next();
+  };
+
+  // Handle the focus event
+  const handleFocus = (e: any) => {
+    // console.log(`Field focused: ${e.target.name}`);
+  };
+
+  // Handle the KeyDown  event
+  const handleKeyDown = () => {
+    // console.log("keydown");
+  };
+
+  // Handle the KeyUp  event
+  const handleKeyUp = () => {
+    // console.log("keyup");
+  };
+
+  // Handle the KeyPress  event
+  const handleKeyPress = () => {
+    // console.log("keypress");
+  };
+
+  //    handle Add services
+  const AddServices = (arrayHelpers: any, setFieldValue: any, values: any) => {
+    arrayHelpers.push({ name: "" });
+    setFieldValue("numberOfServices", values.numberOfServices + 1);
+  };
+
+  //   handle Remove services
+  const RemoveServices = (
+    arrayHelpers: any,
+    values: any,
+    index: any,
+    setFieldValue: any
+  ) => {
+    arrayHelpers.remove(index);
+    setFieldValue("numberOfServices", values.numberOfServices - 1);
   };
   return (
     <div className={`${s.stepswrapper} `}>
@@ -79,15 +125,17 @@ const Industry = () => {
           enableReinitialize={true}
           initialValues={Industrydetails}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            // You can handle form submission here
-            setIndustryDetails(values);
-            // Call next() to proceed to the next step
-            next();
-          }}
+          onSubmit={IndustryFormSubmit}
         >
-          {(formikProps) => (
-            <form onSubmit={formikProps.handleSubmit}>
+          {({
+            values,
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            handleReset,
+            setFieldValue,
+          }) => (
+            <form onSubmit={handleSubmit}>
               <div className={s.formwrapper}>
                 <label htmlFor="industryCategory">
                   Select OR Create Industry Category
@@ -97,20 +145,17 @@ const Industry = () => {
                   name="industryCategory"
                   isClearable
                   options={category}
+                  onFocus={handleFocus}
                   value={category
                     .flatMap((category: any) => category.options)
                     .find(
-                      (option: any) =>
-                        option?.label === formikProps.values.industryCategory
+                      (option: any) => option?.label === values.industryCategory
                     )}
                   onCreateOption={(inputValue) =>
-                    handleCreate(inputValue, formikProps)
+                    handleCategoryCreate(inputValue, setFieldValue)
                   }
                   onChange={(newValue) => {
-                    formikProps.setFieldValue(
-                      "industryCategory",
-                      newValue?.label
-                    );
+                    setFieldValue("industryCategory", newValue?.label);
                   }}
                 />
 
@@ -129,8 +174,13 @@ const Industry = () => {
                     className="form-control"
                     id="industryDescription"
                     name="industryDescription"
-                    onChange={formikProps.handleChange}
-                    value={formikProps.values.industryDescription}
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={handleKeyUp}
+                    onKeyPress={handleKeyPress}
+                    onBlur={handleBlur}
+                    value={values.industryDescription}
                   ></Field>
                   <ErrorMessage
                     name="industryDescription"
@@ -147,8 +197,12 @@ const Industry = () => {
                     className="form-control"
                     id="businessDescription"
                     name="businessDescription"
-                    onChange={formikProps.handleChange}
-                    value={formikProps.values.businessDescription}
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={handleKeyUp}
+                    onBlur={handleBlur}
+                    value={values.businessDescription}
                   ></Field>
                   <ErrorMessage
                     name="businessDescription"
@@ -159,54 +213,54 @@ const Industry = () => {
                 <FieldArray name="services">
                   {(arrayHelpers) => (
                     <div>
-                      {formikProps.values.services &&
-                        formikProps.values.services.map(
-                          (service: any, index: number) => (
-                            <div key={index} className={s.servicesWrapper}>
-                              <label htmlFor={`services.${index}.name`}>
-                                Service Name
-                              </label>
-                              <Field
-                                type="text"
-                                id={`services.${index}.name`}
-                                name={`services.${index}.name`}
-                                className="form-control"
-                              />
-                              <ErrorMessage
-                                name={`services.${index}.name`}
-                                component="div"
-                                className={s.error}
-                              />
+                      {values.services &&
+                        values.services.map((service: any, index: number) => (
+                          <div key={index} className={s.servicesWrapper}>
+                            <label htmlFor={`services.${index}.name`}>
+                              Service Name
+                            </label>
+                            <Field
+                              type="text"
+                              id={`services.${index}.name`}
+                              name={`services.${index}.name`}
+                              onChange={handleChange}
+                              onFocus={handleFocus}
+                              onKeyDown={handleKeyDown}
+                              onKeyUp={handleKeyUp}
+                              onBlur={handleBlur}
+                              className="form-control"
+                            />
+                            <ErrorMessage
+                              name={`services.${index}.name`}
+                              component="div"
+                              className={s.error}
+                            />
 
-                              {index > 0 && (
-                                <button
-                                  type="button"
-                                  className={s.removeButton}
-                                  onClick={() => {
-                                    arrayHelpers.remove(index);
-                                    formikProps.setFieldValue(
-                                      "numberOfServices",
-                                      formikProps.values.numberOfServices - 1
-                                    );
-                                  }}
-                                >
-                                  <MdCancel />
-                                </button>
-                              )}
-                            </div>
-                          )
-                        )}
+                            {index > 0 && (
+                              <button
+                                type="button"
+                                className={s.removeButton}
+                                onClick={() =>
+                                  RemoveServices(
+                                    arrayHelpers,
+                                    values,
+                                    index,
+                                    setFieldValue
+                                  )
+                                }
+                              >
+                                <MdCancel />
+                              </button>
+                            )}
+                          </div>
+                        ))}
                       <div className={s.addmorecontainer}>
                         <button
                           className={`${s.addmore} btn btn-primary`}
                           type="button"
-                          onClick={() => {
-                            arrayHelpers.push({ name: "" });
-                            formikProps.setFieldValue(
-                              "numberOfServices",
-                              formikProps.values.numberOfServices + 1
-                            );
-                          }}
+                          onClick={() =>
+                            AddServices(arrayHelpers, setFieldValue, values)
+                          }
                         >
                           Add More Services
                         </button>
@@ -222,6 +276,7 @@ const Industry = () => {
                         type="radio"
                         name="includeBrandName"
                         value="yes"
+                        onChange={handleChange}
                         onClick={() => setShowBrandNameInput(true)}
                       />
                       {/* <span className={s.customradio}></span> */}
@@ -232,24 +287,29 @@ const Industry = () => {
                         type="radio"
                         name="includeBrandName"
                         value="no"
+                        onChange={handleChange}
                         onClick={() => {
                           setShowBrandNameInput(false);
-                          formikProps.setFieldValue("brandName", "");
+                          setFieldValue("brandName", "");
                         }}
                       />
                       {/* <span className={s.customradio}></span> */}
                       No
                     </label>
                   </span>
-                  {formikProps.values.includeBrandName === "yes" && (
+                  {values.includeBrandName === "yes" && (
                     <div>
                       <label htmlFor="brandName">Brand Name</label>
-                      <input
+                      <Field
                         type="text"
                         id="brandName"
                         name="brandName"
-                        onChange={formikProps.handleChange}
-                        value={formikProps.values.brandName}
+                        onChange={handleChange}
+                        value={values.brandName}
+                        onFocus={handleFocus}
+                        onKeyDown={handleKeyDown}
+                        onKeyUp={handleKeyUp}
+                        onBlur={handleBlur}
                       />
                       <ErrorMessage
                         name="brandName"

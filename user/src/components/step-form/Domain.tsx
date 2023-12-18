@@ -15,30 +15,20 @@ const validationSchema = Yup.object().shape({
 const Domain = () => {
   const { next, prev, domain, setdomain }: any =
     useContext(MultiStepFormContext);
+
+  const handleDomainForm = (values: any) => {
+    // set the domain form values.
+    setdomain(values);
+    // Call next() to proceed to the next step
+    next();
+  };
   return (
-    // <div className={s.Domainwrapper}>
-    //   <div className={s.heading}>No action needed as of now</div>
-    //   <div className={s.btnwrapper}>
-    //     <button className={`${s.btnprev} mt-4`} onClick={prev}>
-    //       Back
-    //     </button>
-    //     <button className={`${s.btnnext} mt-4`} onClick={next}>
-    //       Next
-    //     </button>
-    //   </div>
-    // </div>
     <div className={s.stepswrapper}>
       <div className={s.maincard}>
         <Formik
           initialValues={domain}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            console.log("values", values);
-
-            setdomain(values);
-            console.log("values", values);
-            next();
-          }}
+          onSubmit={handleDomainForm}
         >
           {({
             values,

@@ -1,9 +1,6 @@
 import React, { useContext } from "react";
 import { Formik } from "formik";
 import s from "./multiplestep.module.css";
-
-// import { Button } from "antd";
-// import { Input } from "formik-antd";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 const BrandName = () => {
   const {  next, prev }: any =

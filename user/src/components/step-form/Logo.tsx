@@ -19,6 +19,8 @@ const validationSchema = Yup.object().shape({
 const Logo = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const { logo, setLogo, next, prev }: any = useContext(MultiStepFormContext);
+
+  // handle click for the upload  image
   const handleImageChange = (e: any, formikProps: any) => {
     const file = e.target.files[0];
 
@@ -27,16 +29,20 @@ const Logo = () => {
       formikProps.setFieldValue("selectedImage", file);
     }
   };
+
+  // handle Submit the upload logo form
+  const handleSubmitLogo = (values: any) => {
+    setLogo(values);
+    next();
+  };
+
   return (
     <div className={s.stepswrapper}>
       <div className={s.maincard}>
         <Formik
           initialValues={logo}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            setLogo(values);
-            next();
-          }}
+          onSubmit={handleSubmitLogo}
         >
           {(formikProps) => (
             <Form onSubmit={formikProps.handleSubmit}>
@@ -68,28 +74,6 @@ const Logo = () => {
                       No
                     </label>
                   </span>
-                  {formikProps.values.includeBrandName === "yes" && (
-                    <div>
-                      <label htmlFor="brandName">Brand Name</label>
-                      <input
-                        type="text"
-                        id="brandName"
-                        name="brandName"
-                        onChange={formikProps.handleChange}
-                        value={formikProps.values.brandName}
-                      />
-                      <ErrorMessage
-                        name="brandName"
-                        component="div"
-                        className={s.error}
-                      />
-                    </div>
-                  )}
-                  <ErrorMessage
-                    name="includeBrandName"
-                    component="div"
-                    className={s.error}
-                  />
                 </div>
                 <ErrorMessage
                   name="includeImage"
@@ -120,6 +104,7 @@ const Logo = () => {
                       component="div"
                       className={s.error}
                     />
+                    {/* Display the selected image */}
                     {formikProps.values.selectedImage && (
                       <div className={s.previewwrapper}>
                         <label>Selected Logo Preview:</label>
@@ -133,7 +118,6 @@ const Logo = () => {
                     )}
                   </>
                 )}
-                {/* Display the selected image */}
                 <div className={s.btnwrapper}>
                   <button className={`${s.btnprev} mt-4`} onClick={prev}>
                     Back

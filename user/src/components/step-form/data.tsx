@@ -8,6 +8,7 @@ export interface Subcategory {
   value: string;
   label: string;
 }
+// category data
 export const categoryOptions: IndustryCategory[] = [
   {
     label: "Retail and E-commerce",
