@@ -190,25 +190,27 @@ const WebsiteTemp = () => {
               </div>
 
               {layoutDetails?.selectedPages &&
-                layoutDetails?.selectedPages.map((pagename: any) => {
-                  return (
-                    <>
-                      <h5 className="mt-5">{pagename.label}</h5>
-                      <GradientBoxes
-                        key={pagename.label}
-                        primaryColor={primaryColor}
-                        secondaryColor={secondaryColor}
-                        pageName={pagename.value}
-                        pageId={pagename.id}
-                        values={values}
-                        setFieldValue={setFieldValue}
-                        // onColorSelect={(color, id) =>
-                        //   handleColorSelect(color, id)
-                        // }
-                      />
-                    </>
-                  );
-                })}
+                layoutDetails?.selectedPages.map(
+                  (pagename: any, index: number) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <h5 className="mt-5">{pagename.label}</h5>
+                        <GradientBoxes
+                          key={pagename.label}
+                          primaryColor={primaryColor}
+                          secondaryColor={secondaryColor}
+                          pageName={pagename.value}
+                          pageId={pagename.id}
+                          values={values}
+                          setFieldValue={setFieldValue}
+                          // onColorSelect={(color, id) =>
+                          //   handleColorSelect(color, id)
+                          // }
+                        />
+                      </React.Fragment>
+                    );
+                  }
+                )}
 
               <div className={s.btnwrapper}>
                 <button className={`${s.btnprev} mt-4`} onClick={prev}>

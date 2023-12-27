@@ -30,6 +30,9 @@ build/Release
 /node_modules
 /jspm_packages
 /package-lock.json
+/.env
+/prisma/migrations/migration_lock.toml
+
 
 # Optional npm cache directory
 .npm

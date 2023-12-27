@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(100)
+  password      String    @db.Char(60)
+  firstName     String?   @db.VarChar(50)
+  lastName      String?   @db.VarChar(50)
+  email         String    @unique @db.VarChar(50)
+  phoneNumber   String?   @db.VarChar(20)
+  rememberToken String?   @db.Text
+  registeredAt  DateTime? @default(now()) @db.Timestamp(0)
+  status        Int       @default(1)
+  createdAt     DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime  @updatedAt @db.Timestamp(0)
+  deleted       Int       @default(0)
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  category    String   @db.Text
+  subCategory String   @db.Text
+  icon        String?  @db.VarChar(20)
+  status      Int      @default(1)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @updatedAt @db.Timestamp(0)
+  deleted     Int      @default(0)
+}
+
+model Website {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @db.Int
+  websiteData String   @db.Text
+  status      Int      @default(0)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @updatedAt @db.Timestamp(0)
+  views       Int      @default(0)
+}
