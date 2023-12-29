@@ -94,7 +94,7 @@ const GradientBoxes = ({
     }
 
     setGradientColors(colors);
-  }, [primaryColor, secondaryColor, pageName]);
+  }, [primaryColor, secondaryColor, pageName ]);
 
   // click event for the select the boxes data
   const handleColorClick = (

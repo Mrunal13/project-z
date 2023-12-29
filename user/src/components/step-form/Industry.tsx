@@ -4,7 +4,12 @@ import * as Yup from "yup";
 import CreatableSelect from "react-select/creatable";
 import s from "./multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
-import { MdCancel } from "react-icons/md";
+import Image from "next/image";
+import { Title } from "../base/Title";
+import { Label } from "../base/form/Label";
+import TextArea from "../base/form/TextArea";
+import TextInput from "../base/form/TextInput";
+import RadioButtonGroup from "../base/form/RadioButtongroup";
 
 const validationSchema = Yup.object().shape({
   industryCategory: Yup.mixed().required("Industry Category is required"),
@@ -23,14 +28,6 @@ const validationSchema = Yup.object().shape({
       schema.required("Brand Name is required when including it"),
     otherwise: (schema) => schema,
   }),
-  // numberOfServices: Yup.number()
-  //   .required("Number of services is required")
-  //   .min(1, "Number of services must be at least 1"),
-  services: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required("Service Name is required"),
-    })
-  ),
 });
 const Industry = () => {
   const {
@@ -39,38 +36,32 @@ const Industry = () => {
     next,
     SetCategory,
     category,
+    setMutate,
   }: any = useContext(MultiStepFormContext);
 
   const [showBrandNameInput, setShowBrandNameInput] = useState(false);
 
   // handle click for the create the category.
-  const handleCategoryCreate = (inputValue: string, setFieldValue: any) => {
+  const handleCategoryCreate = async (
+    inputValue: string,
+    setFieldValue: any
+  ) => {
     const otherIndex = category.findIndex((cat: any) => cat.isOther);
 
-    SetCategory((prev: any) =>
-      otherIndex !== -1
-        ? [
-            ...prev.slice(0, otherIndex),
-            {
-              ...prev[otherIndex],
-              options: [
-                ...prev[otherIndex].options,
-                { value: inputValue, label: inputValue },
-              ],
-            },
-            ...prev.slice(otherIndex + 1),
-          ]
-        : [
-            ...prev,
-            {
-              label: "Other",
-              options: [{ value: inputValue, label: inputValue }],
-              isOther: true,
-            },
-          ]
-    );
-
-    setFieldValue("industryCategory", inputValue);
+    try {
+      const response = await fetch("/api/category", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ subCategoryName: inputValue }),
+      });
+      setMutate(true);
+      setFieldValue("industryCategory", inputValue);
+    } catch (error) {
+      console.error("Error creating subcategory:", error);
+      // Handle error (e.g., show a user-friendly message)
+    }
   };
 
   //Handle submit industry form
@@ -101,237 +92,176 @@ const Industry = () => {
     // console.log("keypress");
   };
 
-  //    handle Add services
-  const AddServices = (arrayHelpers: any, setFieldValue: any, values: any) => {
-    arrayHelpers.push({ name: "" });
-    setFieldValue("numberOfServices", values.numberOfServices + 1);
-  };
-
-  //   handle Remove services
-  const RemoveServices = (
-    arrayHelpers: any,
-    values: any,
-    index: any,
-    setFieldValue: any
-  ) => {
-    arrayHelpers.remove(index);
-    setFieldValue("numberOfServices", values.numberOfServices - 1);
-  };
   return (
-    <div className={`${s.stepswrapper} `}>
-      <div className={s.maincard}>
-        <h6 className={s.heading}>Industry Details</h6>
-        <Formik
-          enableReinitialize={true}
-          initialValues={Industrydetails}
-          validationSchema={validationSchema}
-          onSubmit={IndustryFormSubmit}
-        >
-          {({
-            values,
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            handleReset,
-            setFieldValue,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <div className={s.formwrapper}>
-                <label htmlFor="industryCategory">
-                  Select OR Create Industry Category
-                </label>
-                <CreatableSelect
-                  id="industryCategory"
-                  name="industryCategory"
-                  isClearable
-                  options={category}
-                  onFocus={handleFocus}
-                  value={category
-                    .flatMap((category: any) => category.options)
-                    .find(
-                      (option: any) => option?.label === values.industryCategory
-                    )}
-                  onCreateOption={(inputValue) =>
-                    handleCategoryCreate(inputValue, setFieldValue)
-                  }
-                  onChange={(newValue) => {
-                    setFieldValue("industryCategory", newValue?.label);
-                  }}
-                />
-
-                <ErrorMessage
-                  name="industryCategory"
-                  component="div"
-                  className={s.error}
-                />
-                <div className={`${s.Description} form-group`}>
-                  <label htmlFor="industryDescription">
-                    Industry Description
-                  </label>
-                  <br />
-                  <Field
-                    as="textarea"
-                    className="form-control"
-                    id="industryDescription"
-                    name="industryDescription"
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    onKeyDown={handleKeyDown}
-                    onKeyUp={handleKeyUp}
-                    onKeyPress={handleKeyPress}
-                    onBlur={handleBlur}
-                    value={values.industryDescription}
-                  ></Field>
-                  <ErrorMessage
-                    name="industryDescription"
-                    component="div"
-                    className={s.error}
-                  />
-                </div>
-                <div className={`${s.Description} form-group`}>
-                  <label htmlFor="businessDescription">
-                    Business Description
-                  </label>
-                  <Field
-                    as="textarea"
-                    className="form-control"
-                    id="businessDescription"
-                    name="businessDescription"
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    onKeyDown={handleKeyDown}
-                    onKeyUp={handleKeyUp}
-                    onBlur={handleBlur}
-                    value={values.businessDescription}
-                  ></Field>
-                  <ErrorMessage
-                    name="businessDescription"
-                    component="div"
-                    className={s.error}
-                  />
-                </div>
-                <FieldArray name="services">
-                  {(arrayHelpers) => (
-                    <div>
-                      {values.services &&
-                        values.services.map((service: any, index: number) => (
-                          <div key={index} className={s.servicesWrapper}>
-                            <label htmlFor={`services.${index}.name`}>
-                              Service Name
-                            </label>
-                            <Field
-                              type="text"
-                              id={`services.${index}.name`}
-                              name={`services.${index}.name`}
-                              onChange={handleChange}
-                              onFocus={handleFocus}
-                              onKeyDown={handleKeyDown}
-                              onKeyUp={handleKeyUp}
-                              onBlur={handleBlur}
-                              className="form-control"
-                            />
-                            <ErrorMessage
-                              name={`services.${index}.name`}
-                              component="div"
-                              className={s.error}
-                            />
-
-                            {index > 0 && (
-                              <button
-                                type="button"
-                                className={s.removeButton}
-                                onClick={() =>
-                                  RemoveServices(
-                                    arrayHelpers,
-                                    values,
-                                    index,
-                                    setFieldValue
-                                  )
-                                }
-                              >
-                                <MdCancel />
-                              </button>
-                            )}
-                          </div>
-                        ))}
-                      <div className={s.addmorecontainer}>
-                        <button
-                          className={`${s.addmore} btn btn-primary`}
-                          type="button"
-                          onClick={() =>
-                            AddServices(arrayHelpers, setFieldValue, values)
-                          }
-                        >
-                          Add More Services
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </FieldArray>
+    <div className="mainsection ">
+      <div className="leftSection ">
+        <Image src="/images/left-img.svg" alt="leftsideimage" width={500} height={510} />
+      </div>
+      <div className="rightSection ">
+        <Title title="What industry? Describe industry briefly." />
+        <p className="small-heading">
+          Lorem ipsum dolor sit amet consectetur. Facilisi in iaculis{" "}
+        </p>
+        <div className="formwrapper">
+          <Formik
+            enableReinitialize={true}
+            initialValues={Industrydetails}
+            validationSchema={validationSchema}
+            onSubmit={IndustryFormSubmit}
+          >
+            {({
+              values,
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              handleReset,
+              setFieldValue,
+              errors,
+              touched,
+            }) => (
+              <form onSubmit={handleSubmit}>
                 <div>
-                  <label>Include Brand Name?</label>
-                  <span className={s.radiogroup}>
-                    <label>
-                      <Field
-                        type="radio"
-                        name="includeBrandName"
-                        value="yes"
-                        onChange={handleChange}
-                        onClick={() => setShowBrandNameInput(true)}
-                      />
-                      {/* <span className={s.customradio}></span> */}
-                      Yes
-                    </label>
-                    <label>
-                      <Field
-                        type="radio"
-                        name="includeBrandName"
-                        value="no"
-                        onChange={handleChange}
-                        onClick={() => {
-                          setShowBrandNameInput(false);
-                          setFieldValue("brandName", "");
-                        }}
-                      />
-                      {/* <span className={s.customradio}></span> */}
-                      No
-                    </label>
-                  </span>
-                  {values.includeBrandName === "yes" && (
-                    <div>
-                      <label htmlFor="brandName">Brand Name</label>
-                      <Field
-                        type="text"
-                        id="brandName"
+                  <Label label="Industry Category" htmlFor="industryCategory" />
+                  <CreatableSelect
+                    id="industryCategory"
+                    name="industryCategory"
+                    isClearable
+                    options={category}
+                    onFocus={handleFocus}
+                    value={category
+                      .flatMap((category: any) => category.options)
+                      .find(
+                        (option: any) =>
+                          option?.label === values.industryCategory
+                      )}
+                    onCreateOption={(inputValue) =>
+                      handleCategoryCreate(inputValue, setFieldValue)
+                    }
+                    onChange={(newValue) => {
+                      setFieldValue("industryCategory", newValue?.label);
+                    }}
+                    placeholder="Please provide a brief description of the industry"
+                  />
+
+                  {/* <ErrorMessage
+                      name="industryCategory"
+                      component="div"
+                      className={s.error}
+                    /> */}
+
+                  <TextArea
+                    label="Describe your industry"
+                    name="industryDescription"
+                    errors={errors}
+                    touched={touched}
+                    id="industryDescription"
+                    placeholder="Please provide a brief description of the industry"
+                    onChange={handleChange}
+                    value={values.industryDescription}
+                  />
+
+                  <TextArea
+                    label="Describe your Business"
+                    name="businessDescription"
+                    errors={errors}
+                    touched={touched}
+                    id="businessDescription"
+                    placeholder="Please provide a brief description of the business"
+                    onChange={handleChange}
+                    value={values.businessDescription}
+                  />
+                  {/* <FieldArray name="services">
+                    {(arrayHelpers) => (
+                      <div>
+                        {values.services &&
+                          values.services.map((service: any, index: number) => (
+                            <div key={index} className={s.servicesWrapper}>
+                              <label htmlFor={`services.${index}.name`}>
+                                Service Name
+                              </label>
+                              <Field
+                                type="text"
+                                id={`services.${index}.name`}
+                                name={`services.${index}.name`}
+                                onChange={handleChange}
+                                onFocus={handleFocus}
+                                onKeyDown={handleKeyDown}
+                                onKeyUp={handleKeyUp}
+                                onBlur={handleBlur}
+                                className="form-control"
+                              />
+                              <ErrorMessage
+                                name={`services.${index}.name`}
+                                component="div"
+                                className={s.error}
+                              />
+
+                              {index > 0 && (
+                                <button
+                                  type="button"
+                                  className={s.removeButton}
+                                  onClick={() =>
+                                    RemoveServices(
+                                      arrayHelpers,
+                                      values,
+                                      index,
+                                      setFieldValue
+                                    )
+                                  }
+                                >
+                                  <MdCancel />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        <div className={s.addmorecontainer}>
+                          <button
+                            className={`${s.addmore} btn btn-primary`}
+                            type="button"
+                            onClick={() =>
+                              AddServices(arrayHelpers, setFieldValue, values)
+                            }
+                          >
+                            Add More Services
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </FieldArray> */}
+                  <div>
+                    <RadioButtonGroup
+                      label="Brand Name"
+                      name="includeBrandName"
+                      options={[
+                        { value: "yes", label: "Yes" },
+                        { value: "no", label: "No" },
+                      ]}
+                    />
+                    {values.includeBrandName === "yes" && (
+                      <TextInput
+                        placeholder="Type your brand name"
                         name="brandName"
                         onChange={handleChange}
                         value={values.brandName}
-                        onFocus={handleFocus}
-                        onKeyDown={handleKeyDown}
-                        onKeyUp={handleKeyUp}
-                        onBlur={handleBlur}
                       />
-                      <ErrorMessage
-                        name="brandName"
-                        component="div"
-                        className={s.error}
-                      />
-                    </div>
-                  )}
-                  <ErrorMessage
-                    name="includeBrandName"
-                    component="div"
-                    className={s.error}
-                  />
-                </div>
+                    )}
+                  </div>
+                  {/* {Object.keys(errors).length > 0 && (
+                      <div className="form-error">
+                        Please fill All the information
+                      </div>
+                    )} */}
 
-                <button className={`${s.btnnext} `} type="submit">
-                  Next
-                </button>
-              </div>
-            </form>
-          )}
-        </Formik>
+                  <div className="btnwrapper ">
+                    <button className="btnnext btn" type="submit">
+                      <a>Next</a>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
   );

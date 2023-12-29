@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Provider } from "@/provider/MultiStepForm";
 import Industry from "./Industry";
 import BrandName from "./BrandName";
-import Logo from "./Logo";
+import UploadLogo from "./UploadLogo";
 import Domain from "./Domain";
-import s from "./multiplestep.module.css";
 import WebsiteTemp from "./websitelayout/WebsiteTem";
-import { categoryOptions } from "./data";
+import Logo from "../layout/logo";
 
 const IndustrydetailsInitialState = {
   industryCategory: "",
@@ -14,8 +13,6 @@ const IndustrydetailsInitialState = {
   businessDescription: "",
   includeBrandName: "",
   brandName: "",
-  numberOfServices: 1,
-  services: [{ name: "" }],
 };
 const logodetails = {
   includeImage: "",
@@ -42,6 +39,10 @@ export interface Layout {
   readonly images: any;
 }
 
+type CategoryItem = {
+  label: unknown;
+  options: any;
+};
 export const Layoutoption: Layout[] = [
   { id: "1", name: "layout one", images: "/images/layout-one.webp" },
   { id: "2", name: "layout two", images: "/images/layout-two.webp" },
@@ -57,46 +58,52 @@ export const PageOption: readonly WebsitePageLayoutOption[] = [
   { value: "Success Story", label: "Success Story", id: "5" },
 ];
 
-const renderStep = (step: Number) => {
-  switch (step) {
-    case 0:
-      return <Industry />;
-    case 1:
-      return <BrandName />;
-    case 2:
-      return <Logo />;
-    case 3:
-      return <Domain />;
-    case 4:
-      return <WebsiteTemp />;
-    default:
-      return null;
-  }
-};
-
-// async function getUsers() {
-//   const res = await fetch("/api/users");
-//   const data = await res.json();
-//   return data;
-// }
-
 const MultiStepForm = () => {
   const [Industrydetails, setIndustryDetails] = useState(
     IndustrydetailsInitialState
   );
+  console.log("Industrydetails", Industrydetails);
+
   const [logo, setLogo] = useState(logodetails);
-  const [category, SetCategory] = useState(categoryOptions);
+  const [category, SetCategory] = useState<CategoryItem[]>([]);
+  const [mutate, setMutate] = useState(false);
   const [domain, setdomain] = useState(Domaindetails);
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
   const [currentStep, setCurrentStep] = useState(0);
+  console.log("mutate", mutate);
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     const users = await getUsers();
-  //     console.log(users, "users");
-  //   }
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getCategory();
+  }, [mutate]);
+
+  async function getCategory() {
+    try {
+      const res = await fetch("/api/category");
+      const data = await res.json();
+      // Assuming the response is an array of category options
+
+      const uniqueCategories = [
+        ...new Set(data?.map((item: any) => item.category)),
+      ];
+      const finalUniqCategory = uniqueCategories.map((cat) => {
+        const subcategoriesForCategory = data
+          .filter((subcategory: any) => subcategory.category === cat)
+          .map((subcategory: any) => ({
+            value: subcategory.subCategory,
+            label: subcategory.subCategory,
+          }));
+
+        return {
+          label: cat,
+          options: subcategoriesForCategory,
+        };
+      });
+      SetCategory(finalUniqCategory);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      // Handle the error as needed
+    }
+  }
 
   // handle the stepform move to next form
   const next = () => {
@@ -112,6 +119,42 @@ const MultiStepForm = () => {
   };
   // move to prev step form
   const prev = () => setCurrentStep(currentStep - 1);
+  const renderStep = (step: Number) => {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            {category && (
+              <>
+                <Logo /> <Industry />{" "}
+              </>
+            )}
+          </>
+        );
+      case 1:
+        if (Industrydetails?.includeBrandName == "no") {
+          return (
+            <>
+              <Logo showDefault={false} />
+              <BrandName />
+            </>
+          );
+        }
+      case 2:
+        return (
+          <>
+            <Logo showDefault={false} />
+            <UploadLogo />
+          </>
+        );
+      case 3:
+        return <Domain />;
+      case 4:
+        return <WebsiteTemp />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <Provider
@@ -122,7 +165,6 @@ const MultiStepForm = () => {
         prev,
         setLogo,
         logo,
-        categoryOptions,
         SetCategory,
         category,
         domain,
@@ -131,15 +173,11 @@ const MultiStepForm = () => {
         layoutDetails,
         setLayoutdetails,
         Layoutoption,
+        setMutate,
       }}
     >
-      <div className={s.stepwrapper}>
-        <div className="container">
-          <h5 className="text-center mb-1">Step {currentStep + 1}</h5>
-          <p className="text-center">step {currentStep + 1} out of 5</p>
-          <main>{renderStep(currentStep)}</main>
-        </div>
-      </div>
+      <Logo />
+      <main>{renderStep(currentStep)}</main>
     </Provider>
   );
 };

@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
   }),
 });
 
-const Logo = () => {
+const UploadLogo = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const { logo, setLogo, next, prev }: any = useContext(MultiStepFormContext);
 
@@ -138,4 +138,4 @@ const Logo = () => {
     </div>
   );
 };
-export default Logo;
+export default UploadLogo;
