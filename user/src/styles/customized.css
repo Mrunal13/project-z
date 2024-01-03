@@ -1,0 +1,42 @@
+/* Customized css */
+
+/* customized css for the createselect */
+.formwrapper .css-13cymwt-control {
+  border-radius: 0;
+  border-style: unset;
+  border-bottom: 1px solid #e2e4e5;
+}
+.formwrapper .css-13cymwt-control:hover {
+  border-color: #e2e4e5;
+}
+.formwrapper .css-t3ipsp-control {
+  box-shadow: none;
+  border-radius: 0;
+  border-style: none;
+  border-width: none;
+  border-bottom: 1px solid #e2e4e5;
+}
+.formwrapper .css-t3ipsp-control:hover {
+  border-radius: 0;
+  border-style: unset;
+  border-bottom: 1px solid #e2e4e5;
+}
+.formwrapper .css-1u9des2-indicatorSeparator {
+  display: none;
+}
+.formwrapper .css-1xc3v61-indicatorContainer {
+  color: black;
+}
+.formwrapper .css-1fdsijx-ValueContainer {
+  padding: 8px 0;
+}
+.formwrapper .css-1jqq78o-placeholder {
+  font-size: 14px;
+  color: #d8d8d8;
+}
+.formwrapper .css-tj5bde-Svg {
+  display: none;
+}
+
+/* btn customized css */
+

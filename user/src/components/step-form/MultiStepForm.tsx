@@ -2,20 +2,56 @@ import React, { useEffect, useState } from "react";
 import { Provider } from "@/provider/MultiStepForm";
 import Industry from "./Industry";
 import BrandName from "./BrandName";
-import Logo from "./Logo";
-import Domain from "./Domain";
-import s from "./multiplestep.module.css";
+import UploadLogo from "./upload-logo/Uploadlogo";
+import Domain from "./Domain/Domain";
 import WebsiteTemp from "./websitelayout/WebsiteTem";
-import { categoryOptions } from "./data";
+import Logo from "../layout/logo";
+import PopUp from "./upload-logo/Uploadlogo";
+import GenerateLogo from "./upload-logo/GenerateLogo";
+import GenerateBrandName from "./Domain/GenerateDomainName";
+import GenerateDomainName from "./Domain/GenerateDomainName";
+import PagesListing from "./website-pages/PagesListing";
+import ColorPalette from "./color-palette";
 
 const IndustrydetailsInitialState = {
+  id: "",
+  userId: "",
+  status: "0/1",
+  createdAt: "",
+  updatedAt: "",
   industryCategory: "",
-  industryDescription: "",
-  businessDescription: "",
-  includeBrandName: "",
+  industry: "",
+  business: "",
+  hasBrandName: "",
   brandName: "",
-  numberOfServices: 1,
-  services: [{ name: "" }],
+  brandNameSearchtext: "",
+  brandNameSearchResults: [],
+  hasBrandLogo: "",
+  brandLogoIcon: "",
+  brandLogoImportUrl: "url",
+  brandLogoSearchOptions: [], //array of search results
+  hasDomain: "",
+  domainName: "",
+  domainNameSearchtext: "",
+  domainNameSearchResults: [],
+  selectedPages: [], //array of selected pages
+  selectedColorPaletteOption: "0=explore 1=custom",
+  colorPaletteExploreOption: [], //array of default previewed colors
+  colorPaletteCustomOption: [], //custom color palette option
+  selectedColorPalatte: [], //array of selected colors
+  templateOptions: [], //array of templates provided for selection
+  selectedTemplate: {}, // selected template
+  selectedTemplates: [], // selected templates
+  user: {
+    email: "",
+    phoneNumber: "",
+    address: {
+      address: "",
+      city: "",
+      country: "",
+      zipCode: "",
+    },
+  },
 };
 const logodetails = {
   includeImage: "",
@@ -42,6 +78,10 @@ export interface Layout {
   readonly images: any;
 }
 
+type CategoryItem = {
+  label: unknown;
+  options: any;
+};
 export const Layoutoption: Layout[] = [
   { id: "1", name: "layout one", images: "/images/layout-one.webp" },
   { id: "2", name: "layout two", images: "/images/layout-two.webp" },
@@ -57,61 +97,137 @@ export const PageOption: readonly WebsitePageLayoutOption[] = [
   { value: "Success Story", label: "Success Story", id: "5" },
 ];
 
-const renderStep = (step: Number) => {
-  switch (step) {
-    case 0:
-      return <Industry />;
-    case 1:
-      return <BrandName />;
-    case 2:
-      return <Logo />;
-    case 3:
-      return <Domain />;
-    case 4:
-      return <WebsiteTemp />;
-    default:
-      return null;
-  }
-};
-
-// async function getUsers() {
-//   const res = await fetch("/api/users");
-//   const data = await res.json();
-//   return data;
-// }
-
 const MultiStepForm = () => {
   const [Industrydetails, setIndustryDetails] = useState(
     IndustrydetailsInitialState
   );
+  console.log("Industrydetails", Industrydetails);
+
   const [logo, setLogo] = useState(logodetails);
-  const [category, SetCategory] = useState(categoryOptions);
+  const [category, SetCategory] = useState<CategoryItem[]>([]);
+  const [mutate, setMutate] = useState(false);
   const [domain, setdomain] = useState(Domaindetails);
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
   const [currentStep, setCurrentStep] = useState(0);
+  const [isopenPopUp, SetOpenPopUp] = useState("");
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     const users = await getUsers();
-  //     console.log(users, "users");
-  //   }
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getCategory();
+  }, [mutate]);
+
+  async function getCategory() {
+    try {
+      const res = await fetch("/api/category");
+      const data = await res.json();
+      // Assuming the response is an array of category options
+
+      const uniqueCategories = [
+        ...new Set(data?.map((item: any) => item.category)),
+      ];
+      const finalUniqCategory = uniqueCategories.map((cat) => {
+        const subcategoriesForCategory = data
+          .filter((subcategory: any) => subcategory.category === cat)
+          .map((subcategory: any) => ({
+            value: subcategory.subCategory,
+            label: subcategory.subCategory,
+          }));
+
+        return {
+          label: cat,
+          options: subcategoriesForCategory,
+        };
+      });
+      SetCategory(finalUniqCategory);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      // Handle the error as needed
+    }
+  }
 
   // handle the stepform move to next form
-  const next = () => {
-    if (currentStep === 4) {
-      setCurrentStep(0);
-      setIndustryDetails(IndustrydetailsInitialState);
-      setLogo(logodetails);
-      setdomain(Domaindetails);
-      // setLayoutdetails(WebsiteLayoutDetails);
-      return;
-    }
-    setCurrentStep(currentStep + 1);
+  const next = (currentStep: any) => {
+    // if (currentStep === 4) {
+    //   setCurrentStep(0);
+    //   setIndustryDetails(IndustrydetailsInitialState);
+    //   setLogo(logodetails);
+    //   setdomain(Domaindetails);
+    //   // setLayoutdetails(WebsiteLayoutDetails);
+    //   return;
+    // }
+    setCurrentStep(currentStep);
   };
   // move to prev step form
-  const prev = () => setCurrentStep(currentStep - 1);
+  const prev = (currentStep: any) => setCurrentStep(currentStep);
+
+  const renderStep = (step: any) => {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            {category && (
+              <>
+                <Logo /> <Industry />{" "}
+              </>
+            )}
+          </>
+        );
+      case 1:
+        if (Industrydetails?.hasBrandName == "no") {
+          return (
+            <>
+              <Logo showDefault={false} />
+              <BrandName />
+            </>
+          );
+        }
+      case 2:
+        return (
+          <>
+            <Logo showDefault={false} />
+            <UploadLogo />
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <>
+              <Logo showDefault={false} />
+              <GenerateLogo />
+            </>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <Logo showDefault={false} />
+            <Domain />
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <Logo showDefault={false} />
+            <GenerateDomainName />
+          </>
+        );
+      case 6:
+        return (
+          <>
+            <Logo showDefault={false} />
+            <PagesListing />
+          </>
+        );
+      case 7:
+        return (
+          <>
+            <Logo />
+            <ColorPalette />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Provider
@@ -122,7 +238,6 @@ const MultiStepForm = () => {
         prev,
         setLogo,
         logo,
-        categoryOptions,
         SetCategory,
         category,
         domain,
@@ -131,15 +246,11 @@ const MultiStepForm = () => {
         layoutDetails,
         setLayoutdetails,
         Layoutoption,
+        setMutate,
+        SetOpenPopUp,
       }}
     >
-      <div className={s.stepwrapper}>
-        <div className="container">
-          <h5 className="text-center mb-1">Step {currentStep + 1}</h5>
-          <p className="text-center">step {currentStep + 1} out of 5</p>
-          <main>{renderStep(currentStep)}</main>
-        </div>
-      </div>
+      <main>{renderStep(currentStep)}</main>
     </Provider>
   );
 };

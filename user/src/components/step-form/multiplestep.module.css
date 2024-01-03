@@ -1,4 +1,4 @@
-.stepwrapper {
+/* .stepwrapper {
   margin: 60px auto;
 }
 /* .step1wrapper {
@@ -159,9 +159,7 @@
   margin-top: 15px;
   /* transition: background-color 0.3s ease; */
 }
-.addmore:hover {
-  /* background-color: #0056b3; */
-}
+
 .servicesWrapper {
   position: relative;
 }
@@ -194,7 +192,6 @@
   background: white;
   transition: transform 0.15s;
 }
-/*  */
 
 .layoutbg .pagestemp:active {
   transform: scale(0.9);
@@ -249,4 +246,9 @@
   position: absolute;
   top: 4px;
   right: 1px;
+}
+
+.craft_text {
+  font-weight: 300;
+  font-size: 28px;
 }

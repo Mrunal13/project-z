@@ -1,0 +1,14 @@
+.headerwrapper {
+  position: absolute;
+  z-index: 2;
+  padding-top: 55px;
+  padding-left: 52px;
+}
+.other_header_wrapper {
+  padding-top: 55px;
+  padding-left: 52px;
+}
+
+.logo {
+  cursor: pointer;
+}
