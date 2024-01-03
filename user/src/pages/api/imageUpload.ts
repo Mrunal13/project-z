@@ -26,7 +26,6 @@ export default async function handler(
   try {
     const uploadDir = path.join(process.cwd(), "public/uploads");
     // const uploadDir = serverPath("public/uploads");
-    console.log("UPLOAD DIR", uploadDir);
 
     // Ensure that the target directory exists
     await ensureDirectoryExists(uploadDir);
@@ -45,21 +44,27 @@ export default async function handler(
       if (!image) {
         return res.status(400).json({ error: "Image file not provided" });
       }
-
       const sanitizedFileName = sanitizeFileName(image.name);
-      const uniqueFileName = `${uuidv4()}-${sanitizedFileName}`;
+      const fileExtension = getFileExtension(sanitizedFileName);
+      const uniqueFileName = `${uuidv4()}.${fileExtension}`;
 
       const oldPath = image.path as string; // Assert the type of image.path to string
       const newPath = path.join(uploadDir, uniqueFileName);
 
       await fs.rename(oldPath, newPath);
 
-      const imageUrl = `/uploads/${uniqueFileName}`;
-
-      res.status(200).json({ imageUrl });
+      res.status(200).json({ uniqueFileName });
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+}
+
+function getFileExtension(filename: string) {
+  // Use a regular expression to match the file extension
+  const match = /\.([0-9a-z]+)$/i.exec(filename);
+
+  // If a match is found, return the matched extension (group 1)
+  return match ? match[1] : null;
 }
