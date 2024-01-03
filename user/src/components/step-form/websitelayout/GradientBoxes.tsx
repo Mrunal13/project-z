@@ -65,7 +65,7 @@ const GradientBoxes = ({
   values,
   setFieldValue,
 }: any) => {
-  const [gradientColors, setGradientColors] = useState([]);
+  const [gradientColors, setGradientColors] = useState<any>([]);
   const [selectedColor, setSelectedColor] = useState(null);
   const { layoutDetails, setLayoutdetails }: any =
     useContext(MultiStepFormContext);
@@ -126,7 +126,7 @@ const GradientBoxes = ({
   return (
     <>
       <div className={s.layoutbg}>
-        {gradientColors.map((colordetails: any, index) => {
+        {gradientColors.map((colordetails: any, index: number) => {
           return (
             <>
               <div key={colordetails?.PageId} className={s.pagestemp}>

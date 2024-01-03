@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Provider } from "@/provider/MultiStepForm";
 import Industry from "./Industry";
 import BrandName from "./BrandName";
@@ -74,6 +74,12 @@ const renderStep = (step: Number) => {
   }
 };
 
+// async function getUsers() {
+//   const res = await fetch("/api/users");
+//   const data = await res.json();
+//   return data;
+// }
+
 const MultiStepForm = () => {
   const [Industrydetails, setIndustryDetails] = useState(
     IndustrydetailsInitialState
@@ -83,6 +89,14 @@ const MultiStepForm = () => {
   const [domain, setdomain] = useState(Domaindetails);
   const [layoutDetails, setLayoutdetails] = useState(WebsiteLayoutDetails);
   const [currentStep, setCurrentStep] = useState(0);
+
+  // useEffect(() => {
+  //   async function getData() {
+  //     const users = await getUsers();
+  //     console.log(users, "users");
+  //   }
+  //   getData();
+  // }, []);
 
   // handle the stepform move to next form
   const next = () => {
