@@ -246,7 +246,7 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 1024px;
+  height: 100vh;
   gap: 24px;
 }
 .popup-container .popup-btncontainer {
@@ -382,12 +382,29 @@ p {
 /* .custom-checkbox label {
   font-size: 16px;
 } */
+
+/* website pages css */
+.grid-class {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px 42px;
+  margin: 71px 0;
+}
+.pages-listing_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid #e2e4e5;
+  padding: 8px 0;
+  cursor: pointer;
+  width: 336px;
+}
 .pages-listing_wrapper .page_list_title {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
-.pages-listing_wrapper .page_desc p {
+.pages-listing_wrapper .page-desc p {
   color: #9a9ea5;
   font-family: "Roboto", sans-serif;
   font-size: 14px;
@@ -404,23 +421,75 @@ p {
 }
 
 .customCheckboxStyle {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  border: 2px solid #333;
+  border: 2px solid #c4c4c4;
   display: inline-block;
-  margin-right: 8px;
   position: relative;
 }
 
 .customCheckbox:checked + .customCheckboxStyle::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background-color: #333;
+  background-color: #ef5839;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* color-paletter css */
+.colors-generate-form {
+  margin: 32px 0;
+  max-width: 585px;
+  width: 100%;
+}
+.color-palette-tab {
+  display: flex;
+  gap: 35px;
+}
+.color-tab-content {
+  margin-top: 26px;
+}
+.color-tab-content .explore-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 29px;
+}
+.explore-btn-wrap .btn:first-child:active {
+  border-color: #fff;
+}
+.color-tab-content .color-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.color-row .color-column {
+  display: flex;
+  cursor: pointer;
+}
+.color-palette-tab .nav-item {
+  max-width: 268px;
+  width: 100%;
+}
+.color-palette-tab .nav-pills .nav-link {
+  background-color: #000;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.color-palette-tab .nav-pills .nav-link.active {
+  background-color: #2f3032;
+}
+.color-palette-tab .nav-pills .nav-link:hover {
+  background-color: #585858;
+}
+.selected{
+  border:  1px solid red;
 }

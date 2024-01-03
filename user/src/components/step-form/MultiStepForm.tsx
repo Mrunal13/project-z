@@ -11,6 +11,7 @@ import GenerateLogo from "./upload-logo/GenerateLogo";
 import GenerateBrandName from "./Domain/GenerateDomainName";
 import GenerateDomainName from "./Domain/GenerateDomainName";
 import PagesListing from "./website-pages/PagesListing";
+import ColorPalette from "./color-palette";
 
 const IndustrydetailsInitialState = {
   id: "",
@@ -100,6 +101,8 @@ const MultiStepForm = () => {
   const [Industrydetails, setIndustryDetails] = useState(
     IndustrydetailsInitialState
   );
+  console.log("Industrydetails", Industrydetails);
+
   const [logo, setLogo] = useState(logodetails);
   const [category, SetCategory] = useState<CategoryItem[]>([]);
   const [mutate, setMutate] = useState(false);
@@ -200,12 +203,6 @@ const MultiStepForm = () => {
             <Domain />
           </>
         );
-      // case 5:
-      //   return (
-      //     <>
-      //       <Logo showDefault={false} /> <DomainInstruction />
-      //     </>
-      //   );
       case 5:
         return (
           <>
@@ -218,6 +215,13 @@ const MultiStepForm = () => {
           <>
             <Logo showDefault={false} />
             <PagesListing />
+          </>
+        );
+      case 7:
+        return (
+          <>
+            <Logo />
+            <ColorPalette />
           </>
         );
       default:

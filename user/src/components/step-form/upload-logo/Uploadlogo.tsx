@@ -56,7 +56,7 @@ const UploadLogo = () => {
     }
   };
 
-  const handleDragOver = (e:any) => {
+  const handleDragOver = (e: any) => {
     e.preventDefault();
   };
 

@@ -29,7 +29,57 @@ const data = [
   },
   {
     id: "5",
-    title: "Queen Cuts",
+    title: "The Sweet Touch Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "6",
+    title: "The Closeup Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "7",
+    title: "Happy Hair Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "8",
+    title: "Sunny Street Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "9",
+    title: "Style Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "10",
+    title: "Loveable Locks Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "11",
+    title: "Hair Repair",
+    description: "Domain Available",
+  },
+  {
+    id: "12",
+    title: "The Babe Spot",
+    description: "Domain Available",
+  },
+  {
+    id: "13",
+    title: "Style Street Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "13",
+    title: "Sassy Life Salon",
+    description: "Domain Available",
+  },
+  {
+    id: "14",
+    title: "Pretty Girlz Rock Salon",
     description: "Domain Available",
   },
 ];
@@ -37,7 +87,7 @@ const data = [
 const validationSchema = Yup.object().shape({
   brandNameSearchtext: Yup.string().required("Please add the brandName"),
 
-  brandName: Yup.string().required("Please select  the brandName"),
+  brandName: Yup.string().required("Please select the brandName"),
 });
 
 const BrandName = () => {
@@ -46,16 +96,6 @@ const BrandName = () => {
   const [nameSearch, SetNameSerch] = useState(
     Industrydetails.brandNameSearchtext
   );
-  const [BrandName, SetBrandName] = useState();
-
-  // useEffect(() => {
-  //   if (nameSearch) {
-  //     setIndustryDetails((prevdata: any) => ({
-  //       ...prevdata,
-  //       brandNameSearchResults: "data",
-  //     }));
-  //   }
-  // }, [nameSearch]);
   const generateBrandName = (values: any) => {
     // Add your brand name generation logic here
     SetNameSerch(values.brandNameSearchtext);
@@ -67,14 +107,12 @@ const BrandName = () => {
   };
 
   const handleBrandnameSelect = (list: any, setFieldValue: any) => {
-    SetBrandName(list.id);
     setIndustryDetails((prevdata: any) => ({
       ...prevdata,
       brandName: list.title,
     }));
     setFieldValue("brandName", list.title);
   };
-
   return (
     <div className="container">
       <div className="other-main-wrapper">
