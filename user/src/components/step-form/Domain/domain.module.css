@@ -1,0 +1,64 @@
+.instruction_main {
+  max-width: 700px;
+  width: 100%;
+  padding-top: 30px;
+}
+.domain_instruction_wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
+}
+.instructions_steps {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.step h5 {
+  font-size: 18px;
+  margin-bottom: 0;
+  font-family: "Roboto", sans-serif;
+}
+.stepCount {
+  width: 22px;
+  height: 22px;
+  background: #ef5839;
+  font-size: 15px;
+  text-align: center;
+  border-radius: 50px;
+  font-weight: 500;
+  color: #fff;
+}
+.stepTitle label {
+  font-size: 20px;
+  font-weight: 600;
+}
+.verift_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.verift_btn a {
+  color: black;
+}
+.verift_btn button {
+  padding: 8px 26px;
+  border-radius: 8px;
+  background-color: #ef5839;
+  color: #fff;
+  border: 1px solid #ef5839;
+}
+.instruction_select {
+  margin-left: 82px;
+  width: 300px;
+}
+.copy_input_container input{
+margin-left: 82px;
+}
+

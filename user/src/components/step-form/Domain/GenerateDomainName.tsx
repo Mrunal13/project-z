@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Formik, Field, ErrorMessage } from "formik";
-import s from "./multiplestep.module.css";
+import { Formik, Field } from "formik";
+// import s from "../multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
-import TextInput from "../base/form/TextInput";
+import TextInput from "../../base/form/TextInput";
 import Image from "next/image";
-import Listing from "../listinglayout/Listing";
+import Listing from "../../listinglayout/Listing";
 import * as Yup from "yup";
 const data = [
   {
@@ -35,18 +35,17 @@ const data = [
 ];
 
 const validationSchema = Yup.object().shape({
-  brandNameSearchtext: Yup.string().required("Please add the brandName"),
-
-  brandName: Yup.string().required("Please select  the brandName"),
+  domainNameSearchtext: Yup.string().required("Please add the brandName"),
+  domainName: Yup.string().required("Please select  the brandName"),
 });
 
-const BrandName = () => {
+const GenerateDomainName = () => {
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
   const [nameSearch, SetNameSerch] = useState(
-    Industrydetails.brandNameSearchtext
+    Industrydetails.domainNameSearchtext
   );
-  const [BrandName, SetBrandName] = useState();
+  const [Domain, SetDomainName] = useState();
 
   // useEffect(() => {
   //   if (nameSearch) {
@@ -58,21 +57,21 @@ const BrandName = () => {
   // }, [nameSearch]);
   const generateBrandName = (values: any) => {
     // Add your brand name generation logic here
-    SetNameSerch(values.brandNameSearchtext);
+    SetNameSerch(values.domainNameSearchtext);
     setIndustryDetails((prevdata: any) => ({
       ...prevdata,
-      brandNameSearchtext: values.brandNameSearchtext,
-      brandNameSearchResults: data,
+      domainNameSearchtext: values.domainNameSearchtext,
+      domainNameSearchResults: data,
     }));
   };
 
   const handleBrandnameSelect = (list: any, setFieldValue: any) => {
-    SetBrandName(list.id);
+    SetDomainName(list.id);
     setIndustryDetails((prevdata: any) => ({
       ...prevdata,
-      brandName: list.title,
+      domainName: list.title,
     }));
-    setFieldValue("brandName", list.title);
+    setFieldValue("domainName", list.title);
   };
 
   return (
@@ -83,14 +82,14 @@ const BrandName = () => {
           initialValues={Industrydetails}
           validationSchema={validationSchema}
           onSubmit={() => {
-            next(2);
+            next(6);
           }}
         >
           {({ handleSubmit, handleChange, values, setFieldValue }) => (
             <form onSubmit={handleSubmit} className="brandnameform">
-              {!values.brandNameSearchtext && (
+              {!values.domainNameSearchtext && (
                 <div className="title-dashboard">
-                  <span className="style-title">Brand Name </span>Generator
+                  <span className="style-title">Domain Name </span>Generator
                 </div>
               )}
               <div className="input-group">
@@ -102,11 +101,10 @@ const BrandName = () => {
                   className="search-icon"
                 />
                 <TextInput
-                  name="brandNameSearchtext"
+                  name="domainNameSearchtext"
                   onChange={handleChange}
-                  value={values.brandNameSearchtext}
+                  value={values.domainNameSearchtext}
                 />
-
                 <div className="input-group-append">
                   <button
                     className="input-group-text generatebtn"
@@ -118,34 +116,32 @@ const BrandName = () => {
                 </div>
               </div>
               <div>
-                {!values.brandNameSearchtext && (
+                {/* {!values.domainNameSearchtext && (
                   <h2 className={s.craft_text}>
                     {" "}
                     Craft a distinctive business identity with a name that sets
                     you apart.{" "}
                   </h2>
-                )}
-                {values.brandNameSearchtext && nameSearch && (
-                  <>
-                    <Listing
-                      data={values.brandNameSearchResults}
-                      BrandNameselect={(list: any) =>
-                        handleBrandnameSelect(list, setFieldValue)
-                      }
-                      Name={values.brandName}
-                      values={values}
-                      handleChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="brandName"
-                      component="div"
-                      className="form-error"
-                    />
-                  </>
-                )}
+                )} */}
+                {values.domainNameSearchtext && nameSearch && (
+                    
+                  <Listing
+                    data={values.domainNameSearchResults}
+                    BrandNameselect={(list: any) =>
+                      handleBrandnameSelect(list, setFieldValue)
+                    }
+                    Name={values.domainName}
+                    values={values}
+                    handleChange={handleChange}
+                  />
+                )}  
               </div>
               <div className="btnwrapper align-self-end ">
-                <button className="btnprev btn" onClick={() => prev(0)}>
+                <button className="btnprev btn" onClick={() => {
+                    if (Industrydetails.hasDomain === "no") {
+                        prev(4)
+                    }
+                }}>
                   <a>Back</a>
                 </button>
                 <button className="btnnext btn">
@@ -185,4 +181,4 @@ const BrandName = () => {
   );
 };
 
-export default BrandName;
+export default GenerateDomainName;

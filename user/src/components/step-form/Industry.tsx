@@ -13,16 +13,16 @@ import RadioButtonGroup from "../base/form/RadioButtongroup";
 
 const validationSchema = Yup.object().shape({
   industryCategory: Yup.mixed().required("Industry Category is required"),
-  industryDescription: Yup.string()
+  industry: Yup.string()
     .required("Industry Description is required")
-    .max(150, "Must be 150 characters or less"),
-  businessDescription: Yup.string()
+    .max(150, "Must be 500 characters or less"),
+  business: Yup.string()
     .required("Business Description is required")
-    .max(150, "Must be 150 characters or less"),
-  includeBrandName: Yup.string().required(
+    .max(150, "Must be 500 characters or less"),
+  hasBrandName: Yup.string().required(
     "Please select whether to include Brand Name"
   ),
-  brandName: Yup.string().when("includeBrandName", {
+  brandName: Yup.string().when("hasBrandName", {
     is: (value: any) => value === "yes",
     then: (schema) =>
       schema.required("Brand Name is required when including it"),
@@ -69,7 +69,11 @@ const Industry = () => {
     // You can handle form submission here
     setIndustryDetails(values);
     // Call next() to proceed to the next step
-    next();
+    if (values.hasBrandName === "no") {
+      next(1);
+    } else {
+      next(2);
+    }
   };
 
   // Handle the focus event
@@ -95,10 +99,19 @@ const Industry = () => {
   return (
     <div className="mainsection ">
       <div className="leftSection ">
-        <Image src="/images/left-img.svg" alt="leftsideimage" width={500} height={510} />
+        <Image
+          src="/images/left-img.svg"
+          alt="leftsideimage"
+          width={500}
+          height={510}
+        />
       </div>
       <div className="rightSection ">
-        <Title title="What industry? Describe industry briefly." />
+        {/* <Title title="What industry? Describe industry briefly." /> */}
+        <div className="title-dashboard">
+          What industry? Describe <span className="style-title">industry</span>{" "}
+          briefly
+        </div>
         <p className="small-heading">
           Lorem ipsum dolor sit amet consectetur. Facilisi in iaculis{" "}
         </p>
@@ -151,24 +164,24 @@ const Industry = () => {
 
                   <TextArea
                     label="Describe your industry"
-                    name="industryDescription"
+                    name="industry"
                     errors={errors}
                     touched={touched}
-                    id="industryDescription"
+                    id="industry"
                     placeholder="Please provide a brief description of the industry"
                     onChange={handleChange}
-                    value={values.industryDescription}
+                    value={values.industry}
                   />
 
                   <TextArea
                     label="Describe your Business"
-                    name="businessDescription"
+                    name="business"
                     errors={errors}
                     touched={touched}
-                    id="businessDescription"
+                    id="business"
                     placeholder="Please provide a brief description of the business"
                     onChange={handleChange}
-                    value={values.businessDescription}
+                    value={values.business}
                   />
                   {/* <FieldArray name="services">
                     {(arrayHelpers) => (
@@ -231,13 +244,13 @@ const Industry = () => {
                   <div>
                     <RadioButtonGroup
                       label="Brand Name"
-                      name="includeBrandName"
+                      name="hasBrandName"
                       options={[
                         { value: "yes", label: "Yes" },
                         { value: "no", label: "No" },
                       ]}
                     />
-                    {values.includeBrandName === "yes" && (
+                    {values.hasBrandName === "yes" && (
                       <TextInput
                         placeholder="Type your brand name"
                         name="brandName"

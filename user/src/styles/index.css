@@ -37,8 +37,12 @@ p {
   flex-direction: column;
 }
 .title-dashboard {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
+}
+.style-title {
+  color: var(--Primary);
+  font-weight: 300;
 }
 .form-label {
   font-size: 16px;
@@ -75,14 +79,6 @@ p {
   cursor: pointer;
 }
 
-/* .radiobuttongroup input[type="radio"] {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  outline: none;
-  border: 3px solid #b8bcca;
-} */
 .radiobuttongroup input[type="radio"] {
   -webkit-appearance: none;
   width: 20px;
@@ -110,7 +106,6 @@ p {
   border-color: #ef5839;
 }
 
-/* customized css for the input */
 .form-control {
   margin-top: 15px;
 }
@@ -131,6 +126,9 @@ p {
 }
 .btnwrapper {
   display: flex;
+  position: absolute;
+  right: 75px;
+  bottom: 67px;
   /* gap: 10px; */
   justify-content: flex-end;
 }
@@ -168,8 +166,20 @@ p {
   align-items: center;
   justify-content: center;
   gap: 22px;
+  position: relative;
+}
+.brandnameform {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
+.brandnameform .input-group {
+  /* align-items: center; */
+  width: unset;
+  /* Ensure the input group takes the full width */
+}
 .brandnameform input {
   width: 510px;
   border-radius: 34px;
@@ -181,8 +191,7 @@ p {
 .brandnameform input.form-control {
   border: 2px solid #acb1c6;
   padding: 8px 40px;
-  /* height: 40px; */
-  line-height: 1.6;
+  height: 40px;
   margin-top: 0;
 }
 .brandnameform input.form-control:focus {
@@ -195,14 +204,14 @@ p {
   color: #fff;
   font-size: 14px;
   padding: 11px 22px;
-  /* height: 40px; */
+  height: 40px;
   border: 2px solid #ef5839;
 }
 .brandnameform .search-icon {
   position: absolute;
-  top: 14px;
+  top: 50%;
   left: 14px;
-  bottom: 10px;
+  transform: translateY(-50%);
 }
 .brandName-List-wrapper {
   display: grid;
@@ -210,9 +219,12 @@ p {
   justify-content: center;
   gap: 30px 80px;
   grid-template-columns: 1fr 1fr 1fr;
-  margin-top: 47px;
+  margin-top: 34px;
 }
-
+.brandName-List-wrapper .list:hover {
+  border-radius: 8px;
+  background-color: #f8f8f8;
+}
 .list {
   padding: 5px 15px;
   cursor: pointer;
@@ -226,4 +238,189 @@ p {
   color: #9a9ea5;
   text-align: center;
   font-family: "Roboto", sans-serif;
+}
+
+/* Logo popup css */
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 1024px;
+  gap: 24px;
+}
+.popup-container .popup-btncontainer {
+  margin-top: 8px;
+  display: flex;
+  gap: 32px;
+}
+.popup-container .popup-btncontainer button {
+  font-size: 16px;
+  color: #fff;
+  background-color: var(--Primary);
+  border: 1px solid var(--Primary);
+  padding: 12px 30px;
+  border-radius: 8px;
+}
+.popup-container .popup-btncontainer button:hover {
+  background-color: #d55339;
+}
+.popup-container .popup-title {
+  font-size: 28px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
+/* image upload css */
+.uploadimage-wrapper {
+  width: 100%;
+  max-width: 724px;
+}
+.imageupload-card {
+  border: 3.9px solid #b3ccfc1a;
+  padding: 41px 51px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+.imageupload-card .cancel-icon {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  cursor: pointer;
+}
+.imageupload-card .title {
+  font-size: 18px;
+  font-weight: 500;
+}
+.imageupload-card .image-des {
+  position: absolute;
+  top: 80px;
+  text-align: center;
+  width: 100%;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.image-des .image-des-title {
+  margin-top: 9px;
+  font-size: 15px;
+}
+.image-des p {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #969db2;
+}
+.imageupload-card .upload-root {
+  width: 100%;
+  height: 220px;
+  background-color: #fff;
+  border: 3px dashed #d9d9d9;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+}
+.imageupload-card .upload-root:hover {
+  border: 3px dashed var(--Primary);
+}
+.imageupload-card .upload-image-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.upload-image-footer .imgUpload-btnwrapper {
+  display: flex;
+  gap: 8px;
+}
+.upload-image-footer button {
+  font-size: 15px;
+  padding: 12px 26px;
+  border-radius: 8px;
+}
+.imgUpload-btnwrapper .done {
+  color: #fff;
+  background: var(--Primary);
+  border: 1px solid var(--Primary);
+}
+.imgUpload-btnwrapper .cancel {
+  padding: 12px 26px;
+  color: #000;
+  background: #fff;
+  border: 1px solid #1a1a1a2e;
+}
+.left-help-text {
+  font-size: 15px;
+  color: #1a1a1a7a;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+/* .custom-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.filled {
+  background-color: #000;
+} */
+
+/* Optional: Style the label for better visibility */
+/* .custom-checkbox label {
+  font-size: 16px;
+} */
+.pages-listing_wrapper .page_list_title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.pages-listing_wrapper .page_desc p {
+  color: #9a9ea5;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+}
+.pages-listing_wrapper .left-page-Title {
+  display: flex;
+  gap: 7px;
+}
+.pages-listing_wrapper .left-page-Title .page-name {
+  font-size: 18px;
+}
+.customCheckbox {
+  display: none;
+}
+
+.customCheckboxStyle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  display: inline-block;
+  margin-right: 8px;
+  position: relative;
+}
+
+.customCheckbox:checked + .customCheckboxStyle::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #333;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
