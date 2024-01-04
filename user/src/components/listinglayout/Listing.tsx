@@ -1,3 +1,5 @@
+import React from "react";
+
 const Listing = ({
   data,
   BrandNameselect,
@@ -13,7 +15,7 @@ const Listing = ({
       <div className="brandName-List-wrapper">
         {data &&
           data?.map((list: any, index: any) => (
-            <>
+            <React.Fragment key={index}>
               <input
                 type="hidden"
                 name="selectedBrandName"
@@ -32,7 +34,7 @@ const Listing = ({
                 <h5 className="list-title">{list.title}</h5>
                 <p className="description">{list.description}</p>
               </div>
-            </>
+            </React.Fragment>
           ))}
       </div>
     </>
