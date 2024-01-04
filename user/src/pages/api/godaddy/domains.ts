@@ -5,8 +5,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { data } = req.body;
-  const auth = process.env.GODADDY_API_AUTH_VALUE;
 
+  const auth = process.env.GODADDY_API_AUTH_VALUE;
   const headers = {
     "Content-Type": "application/json",
     Authorization: `sso-key ${auth}`,

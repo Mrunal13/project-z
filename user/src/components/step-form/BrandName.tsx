@@ -6,7 +6,7 @@ import TextInput from "../base/form/TextInput";
 import Image from "next/image";
 import Listing from "../listinglayout/Listing";
 import * as Yup from "yup";
-const data = [
+const datas = [
   {
     id: "1",
     title: "Queen Cuts",
@@ -96,20 +96,51 @@ const BrandName = () => {
   const [nameSearch, SetNameSerch] = useState(
     Industrydetails.brandNameSearchtext
   );
-  const generateBrandName = (values: any) => {
-    // Add your brand name generation logic here
-    SetNameSerch(values.brandNameSearchtext);
-    setIndustryDetails((prevdata: any) => ({
-      ...prevdata,
-      brandNameSearchtext: values.brandNameSearchtext,
-      brandNameSearchResults: data,
-    }));
+  const [brandName, setBrandName] = useState("");
+  const [Domaindata, SetDomainData] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedDomain, setSelectedDomain] = useState(null);
+  console.log("Domaindata", Domaindata);
+
+  useEffect(() => {
+    if (Industrydetails.brandNameSearchResults) {
+      SetDomainData(Industrydetails.brandNameSearchResults);
+    }
+  }, [Industrydetails]);
+
+  const generateBrandName = async (values: any) => {
+    try {
+      const response = await fetch("/api/godaddy/domains", {
+        method: "POST", // Use the appropriate HTTP method
+        headers: {
+          "Content-Type": "application/json", // Specify content type as JSON
+        },
+        body: JSON.stringify({ data: datas }), // Convert data to JSON string
+      });
+      const data = await response.json();
+      SetDomainData(data);
+      // Process the API response data as needed
+      console.log(data);
+
+      SetNameSerch(values.brandNameSearchtext);
+      setIndustryDetails((prevdata: any) => ({
+        ...prevdata,
+        brandNameSearchtext: values.brandNameSearchtext,
+        brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
+      }));
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
   };
 
   const handleBrandnameSelect = (list: any, setFieldValue: any) => {
+    setBrandName(list);
+    setSelectedBrand(null); // Reset selectedBrand when a new brand name is selected
+    setSelectedDomain(null);
     setIndustryDetails((prevdata: any) => ({
       ...prevdata,
-      brandName: list.title,
+      brandName: "",
+      domainName: "",
     }));
     setFieldValue("brandName", list.title);
   };
@@ -126,7 +157,7 @@ const BrandName = () => {
         >
           {({ handleSubmit, handleChange, values, setFieldValue }) => (
             <form onSubmit={handleSubmit} className="brandnameform">
-              {!values.brandNameSearchtext && (
+              {!nameSearch && (
                 <div className="title-dashboard">
                   <span className="style-title">Brand Name </span>Generator
                 </div>
@@ -156,23 +187,27 @@ const BrandName = () => {
                 </div>
               </div>
               <div>
-                {!values.brandNameSearchtext && (
+                {!nameSearch && (
                   <h2 className={s.craft_text}>
                     {" "}
                     Craft a distinctive business identity with a name that sets
                     you apart.{" "}
                   </h2>
                 )}
-                {values.brandNameSearchtext && nameSearch && (
+                {nameSearch && (
                   <>
                     <Listing
-                      data={values.brandNameSearchResults}
+                      data={Domaindata || values.brandNameSearchResults}
                       BrandNameselect={(list: any) =>
                         handleBrandnameSelect(list, setFieldValue)
                       }
-                      Name={values.brandName}
                       values={values}
                       handleChange={handleChange}
+                      setBrandName={setBrandName}
+                      selectedBrand={selectedBrand}
+                      selectedDomain={selectedDomain}
+                      setSelectedBrand={setSelectedBrand}
+                      setSelectedDomain={setSelectedDomain}
                     />
                     <ErrorMessage
                       name="brandName"
@@ -186,7 +221,7 @@ const BrandName = () => {
                 <button className="btnprev btn" onClick={() => prev(0)}>
                   <a>Back</a>
                 </button>
-                <button className="btnnext btn">
+                <button className="btnnext btn " type="submit">
                   <a>Next</a>
                 </button>
               </div>
@@ -195,29 +230,29 @@ const BrandName = () => {
         </Formik>
 
         {/* {!nameSearch && (
-          <h2 className={s.craft_text}>
-            {" "}
-            Craft a distinctive business identity with a name that sets you
-            apart.{" "}
-          </h2>
-        )}
-        {nameSearch && (
-          <>
-            <Listing
-              data={data}
-              BrandNameselect={handleBrandnameSelect}
-              BrandName={BrandName}
-            />
-          </>
-        )}
-        <div className="btnwrapper align-self-end ">
-          <button className="btnprev btn" onClick={prev}>
-            <a>Back</a>
-          </button>
-          <button className="btnnext btn">
-            <a>Next</a>
-          </button>
-        </div> */}
+            <h2 className={s.craft_text}>
+              {" "}
+              Craft a distinctive business identity with a name that sets you
+              apart.{" "}
+            </h2>
+          )}
+          {nameSearch && (
+            <>
+              <Listing
+                data={data}
+                BrandNameselect={handleBrandnameSelect}
+                BrandName={BrandName}
+              />
+            </>
+          )}
+          <div className="btnwrapper align-self-end ">
+            <button className="btnprev btn" onClick={prev}>
+              <a>Back</a>
+            </button>
+            <button className="btnnext btn">
+              <a>Next</a>
+            </button>
+          </div> */}
       </div>
     </div>
   );

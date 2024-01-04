@@ -471,6 +471,10 @@ p {
   display: flex;
   cursor: pointer;
 }
+.color-row .color-column.selected {
+  box-shadow: inset 0 0 0 2px #ff7b;
+  border: 1px solid red;
+}
 .color-palette-tab .nav-item {
   max-width: 268px;
   width: 100%;
@@ -490,6 +494,27 @@ p {
 .color-palette-tab .nav-pills .nav-link:hover {
   background-color: #585858;
 }
-.selected{
+.custom-color-main .custom-color-box {
+  width: 268px;
+  height: auto;
+}
+/* .selected{
   border:  1px solid red;
+} */
+
+/* domain name Listig css */
+
+.listing-domain-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #e2e4e5;
+  padding: 8px 0;
+  cursor: pointer;
+}
+.listing-domain-wrapper .domain_title {
+  max-width: 300px;
+  width: 100%;
+  display: flex;
+  gap: 8px;
 }

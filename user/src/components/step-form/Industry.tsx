@@ -150,7 +150,9 @@ const Industry = () => {
                     onCreateOption={(inputValue) =>
                       handleCategoryCreate(inputValue, setFieldValue)
                     }
-                    onChange={(newValue) => {
+                    onChange={(newValue: any) => {
+                      console.log("newValue", newValue);
+
                       setFieldValue("industryCategory", newValue?.label);
                     }}
                     placeholder="Please provide a brief description of the industry"
