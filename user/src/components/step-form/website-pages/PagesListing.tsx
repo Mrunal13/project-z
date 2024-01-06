@@ -100,7 +100,7 @@ const PagesListing = () => {
 
               <div className="grid-class">
                 {Pages.map((option, index) => (
-                  <div key={option.name} className="custom-checkbox">
+                  <div key={index} className="custom-checkbox">
                     <label htmlFor={`selectedPages ${index}`}>
                       <div className="pages-listing_wrapper">
                         <div className="page_list_title">
@@ -158,7 +158,14 @@ const PagesListing = () => {
                 >
                   <a>Back</a>
                 </button>
-                <button className="btnnext btn" type="button">
+                {{-- <button className="btnnext btn" type="button"> --}}
+                <button
+                  className="btnnext btn"
+                  type="button"
+                  onClick={() => {
+                    next(7);
+                  }}
+                >
                   <a>Next</a>
                 </button>
               </div>

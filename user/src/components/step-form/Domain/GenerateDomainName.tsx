@@ -110,6 +110,7 @@ const GenerateDomainName = () => {
                     className="input-group-text generatebtn"
                     id="basic-addon2"
                     onClick={() => generateBrandName(values)}
+                    type="button"
                   >
                     Generate
                   </button>
@@ -124,7 +125,6 @@ const GenerateDomainName = () => {
                   </h2>
                 )} */}
                 {values.domainNameSearchtext && nameSearch && (
-                    
                   <Listing
                     data={values.domainNameSearchResults}
                     BrandNameselect={(list: any) =>
@@ -134,17 +134,24 @@ const GenerateDomainName = () => {
                     values={values}
                     handleChange={handleChange}
                   />
-                )}  
+                )}
               </div>
               <div className="btnwrapper align-self-end ">
-                <button className="btnprev btn" onClick={() => {
+                <button
+                  className="btnprev btn"
+                  onClick={() => {
                     if (Industrydetails.hasDomain === "no") {
-                        prev(4)
+                      prev(4);
                     }
-                }}>
+                  }}
+                >
                   <a>Back</a>
                 </button>
-                <button className="btnnext btn">
+                <button
+                  className="btnnext btn"
+                  type="button"
+                  onClick={() => next(6)}
+                >
                   <a>Next</a>
                 </button>
               </div>

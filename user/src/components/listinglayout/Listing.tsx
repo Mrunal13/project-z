@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button, Modal, OverlayTrigger, Popover } from "react-bootstrap";
 import MultiStepFormContext from "@/provider/MultiStepForm";
+import React from "react";
+
 
 const Listing = ({
   data,
@@ -41,13 +43,23 @@ const Listing = ({
         Best Name <span className="style-title "> suggestions</span>
       </div>
       <div className="brandName-List-wrapper">
-        {data.length ? (
-          data?.map((list: any, index: any) => {
-            const brandName = Object.keys(list)[0];
-            const domains = list[brandName].domains;
+        // {data.length ? (
+        //   data?.map((list: any, index: any) => {
+        //     const brandName = Object.keys(list)[0];
+        //     const domains = list[brandName].domains;
 
             return (
               <OverlayTrigger
+        {data &&
+          data?.map((list: any, index: any) => (
+            <React.Fragment key={index}>
+              <input
+                type="hidden"
+                name="selectedBrandName"
+                value={values.brandName}
+                onChange={handleChange}
+              />
+              <div
                 key={index}
                 container={this}
                 trigger="click"
@@ -144,6 +156,13 @@ const Listing = ({
         ) : (
           <p>Loading.........</p>
         )}
+        {{-- 
+                <h5 className="list-title">{list.title}</h5>
+                <p className="description">{list.description}</p>
+              </div>
+            </React.Fragment>
+            --}}
+          ))}
       </div>
       {/* {BrandNameobj && (
         <Modal show={BrandNameobj} onHide={handleClose}>

@@ -166,7 +166,7 @@ const MultiStepForm = () => {
           <>
             {category && (
               <>
-                <Logo /> <Industry />{" "}
+                <Logo /> <Industry />
               </>
             )}
           </>
@@ -190,10 +190,8 @@ const MultiStepForm = () => {
       case 3:
         return (
           <>
-            <>
-              <Logo showDefault={false} />
-              <GenerateLogo />
-            </>
+            <Logo showDefault={false} />
+            <GenerateLogo />
           </>
         );
       case 4:
