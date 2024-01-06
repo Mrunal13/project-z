@@ -81,7 +81,7 @@ const PagesListing = () => {
         <Formik
           enableReinitialize={true}
           initialValues={Industrydetails}
-          validate={validate}
+          // validate={validate}
           onSubmit={(values: any) => {
             console.log("values", values);
             setIndustryDetails({
@@ -158,6 +158,7 @@ const PagesListing = () => {
                 >
                   <a>Back</a>
                 </button>
+                {{-- <button className="btnnext btn" type="button"> --}}
                 <button
                   className="btnnext btn"
                   type="button"

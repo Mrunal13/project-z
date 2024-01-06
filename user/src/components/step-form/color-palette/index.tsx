@@ -10,6 +10,12 @@ const ColorPalette = () => {
     useContext(MultiStepFormContext);
   const [colors, setColor] = useState([]);
   const [selectPalette, setSelectColorPalette] = useState();
+  const [customColor, SetCustomColor] = useState([
+    "#EC4899",
+    "#67C9FA",
+    "#2DD4BF",
+    "#D0996E",
+  ]);
 
   const generateColors = async () => {
     var color = await randomColor({
@@ -140,10 +146,23 @@ const ColorPalette = () => {
                             />
                           </button>
                         </div>
-                      </Tab.Pane>
+                      </Tab.Pane>   
                     </Tab.Content>
                     <Tab.Content>
-                      <Tab.Pane eventKey="custom">Second tab content</Tab.Pane>
+                      <Tab.Pane eventKey="custom">
+                        <div className="custom-color-main">
+                        {customColor?.map((customColor) => {
+                          return (
+                            <div
+                            className="custom-color-box"
+                              style={{
+                                background: customColor,
+                              }}
+                            ></div>
+                          );
+                        })}
+                        </div>
+                      </Tab.Pane>
                     </Tab.Content>
                   </div>
                 </Tab.Container>
