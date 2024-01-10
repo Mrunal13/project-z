@@ -22,7 +22,7 @@ export default async function handler(
     }
 
     // Parse incoming JSON body
-    const { industrySubCategory, industry, business, brandName } = req.body;
+    const { industryCategory, industrySubCategory, industry, business, brandName } = req.body;
 
     // Validate required data
     if (!industrySubCategory || !industry || !business || !brandName) {
@@ -73,6 +73,7 @@ export default async function handler(
     const response = await getOpenAIResponse({ threadId });
 
     // Return the OpenAI response
+
     return res.status(200).json(response);
   } catch (error: any) {
     console.error("Error:", error);

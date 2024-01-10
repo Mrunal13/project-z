@@ -101,7 +101,7 @@ const MultiStepForm = () => {
   const [Industrydetails, setIndustryDetails] = useState(
     IndustrydetailsInitialState
   );
-  console.log("Industrydetails", Industrydetails);
+  //console.log("Industrydetails", Industrydetails);
 
   const [logo, setLogo] = useState(logodetails);
   const [category, SetCategory] = useState<CategoryItem[]>([]);
@@ -127,9 +127,11 @@ const MultiStepForm = () => {
       const finalUniqCategory = uniqueCategories.map((cat) => {
         const subcategoriesForCategory = data
           .filter((subcategory: any) => subcategory.category === cat)
-          .map((subcategory: any) => ({
+          .map((subcategory: any) => (
+          {
             value: subcategory.subCategory,
             label: subcategory.subCategory,
+            group: subcategory.category,
           }));
 
         return {
@@ -166,20 +168,22 @@ const MultiStepForm = () => {
           <>
             {category && (
               <>
-                <Logo /> <Industry />
+                <Logo />
+                {/*<Industry />*/}
+                <PagesListing />
               </>
             )}
           </>
         );
       case 1:
-        if (Industrydetails?.hasBrandName == "no") {
+        //if (Industrydetails?.hasBrandName == "no") {
           return (
             <>
               <Logo showDefault={false} />
               <BrandName />
             </>
           );
-        }
+        //}
       case 2:
         return (
           <>
@@ -194,21 +198,21 @@ const MultiStepForm = () => {
             <GenerateLogo />
           </>
         );
+      // case 4:
+      //   return (
+      //     <>
+      //       <Logo showDefault={false} />
+      //       <Domain />
+      //     </>
+      //   );
+      // case 5:
+      //   return (
+      //     <>
+      //       <Logo showDefault={false} />
+      //       <GenerateDomainName />
+      //     </>
+      //   );
       case 4:
-        return (
-          <>
-            <Logo showDefault={false} />
-            <Domain />
-          </>
-        );
-      case 5:
-        return (
-          <>
-            <Logo showDefault={false} />
-            <GenerateDomainName />
-          </>
-        );
-      case 6:
         return (
           <>
             <Logo showDefault={false} />
@@ -223,7 +227,10 @@ const MultiStepForm = () => {
           </>
         );
       default:
-        return null;
+        <>
+          <Logo showDefault={false} />
+        </>
+        // return null;
     }
   };
 

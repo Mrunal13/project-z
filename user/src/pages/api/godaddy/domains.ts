@@ -14,7 +14,7 @@ export default async function handler(
 
   try {
     const promises = data.map(async (obj: any) => {
-      const queryParams = `query=${obj.title}&country=IN&city=delhi&tlds=co.in, co.uk, tech, org&limit=10`;
+      const queryParams = `query=${obj.title}&country=IN&city=delhi&tlds=co.in, co.uk, tech, org&limit=15`;
 
       // First API call
       const response = await fetch(
@@ -55,7 +55,7 @@ export default async function handler(
 
     const results = await Promise.all(promises);
 
-    // console.log(results, "results");
+    console.log(results, "results");
 
     return res.status(200).json(results);
   } catch (error) {

@@ -4,11 +4,12 @@ import Image from "next/image";
 import { Formik } from "formik";
 import { Nav, Tab } from "react-bootstrap";
 import randomColor from "randomcolor";
+import { SketchPicker } from 'react-color';
 
 const ColorPalette = () => {
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
-  const [colors, setColor] = useState([]);
+  const [colors, setColor] = useState(); //randomColor({count: 6})
   const [selectPalette, setSelectColorPalette] = useState();
   const [customColor, SetCustomColor] = useState([
     "#EC4899",
@@ -17,18 +18,44 @@ const ColorPalette = () => {
     "#D0996E",
   ]);
 
+  const handleClick = () => {
+    setDisplayColorPicker(!displayColorPicker);
+  };
+
+  const handleClose = () => {
+    setDisplayColorPicker(false);
+  };
+
+  const handleChange = (newColor) => {
+    setColor(newColor.rgb);
+  };
+  
   const generateColors = async () => {
-    var color = await randomColor({
+    var color = randomColor({
       count: 6,
     });
-    setColor(color);
+    let finalColors = [];
+    if (color) {
+      color.forEach((maincolor, index) => {
+        var hueColors = randomColor({
+          count: 4,
+          hue: maincolor,
+        });
+        finalColors.push(hueColors);
+      });
+    }
+    //console.log(finalColor);
+    setColor(finalColors);
   };
   useEffect(() => {
+    //console.log(randomColor({count: 6,}));
+    //setColor(randomColor({count: 6,}));
     generateColors();
-  });
+  },[]);
 
-  const handleSelectColorPalette = (index: any, e: any) => {
+  const handleSelectColorPalette = (index: any, e: any, huecolor: any) => {
     // e.preventDefault();
+    //console.log(huecolor);
     setSelectColorPalette(index);
   };
   return (
@@ -94,11 +121,11 @@ const ColorPalette = () => {
                         <div className="color-row">
                           {colors &&
                             colors?.map((maincolor: any, index: any) => {
-                              //   let huecolor = randomColor({
-                              //     count: 4,
-                              //     hue: maincolor,
-                              //   });
-                              //   console.log("huecolor", huecolor);
+                                // let huecolor = randomColor({
+                                //   count: 4,
+                                //   hue: maincolor,
+                                // });
+                              //console.log("huecolor", maincolor);
 
                               return (
                                 <div
@@ -107,11 +134,11 @@ const ColorPalette = () => {
                                     selectPalette === index ? "selected" : ""
                                   }`}
                                   onClick={(e) =>
-                                    handleSelectColorPalette(index, e)
+                                    handleSelectColorPalette(index, e,maincolor)
                                   }
                                 >
-                                  {/* {Array.isArray(huecolor) &&
-                                    huecolor?.map((color: any) => (
+                                  {Array.isArray(maincolor) &&
+                                    maincolor?.map((color: any) => (
                                       <div
                                         key={color}
                                         style={{
@@ -120,7 +147,7 @@ const ColorPalette = () => {
                                           height: 66,
                                         }}
                                       ></div>
-                                    ))} */}
+                                    ))}
                                 </div>
                               );
                             })}
@@ -129,11 +156,9 @@ const ColorPalette = () => {
                           <button
                             className="btn"
                             onClick={() => {
-                              setColor(
-                                randomColor({
-                                  count: 5,
-                                })
-                              );
+                              //setColor(randomColor({count: 6,}));
+                              setSelectColorPalette();
+                              generateColors();
                             }}
                           >
                             Explore More{" "}
@@ -150,6 +175,7 @@ const ColorPalette = () => {
                     </Tab.Content>
                     <Tab.Content>
                       <Tab.Pane eventKey="custom">
+                      <SketchPicker />
                         <div className="custom-color-main">
                         {customColor?.map((customColor) => {
                           return (

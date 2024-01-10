@@ -15,10 +15,10 @@ const validationSchema = Yup.object().shape({
   industryCategory: Yup.mixed().required("Industry Category is required"),
   industry: Yup.string()
     .required("Industry Description is required")
-    .max(150, "Must be 500 characters or less"),
+    .max(1000, "Must be 1000 characters or less"),
   business: Yup.string()
     .required("Business Description is required")
-    .max(150, "Must be 500 characters or less"),
+    .max(1000, "Must be 1000 characters or less"),
   hasBrandName: Yup.string().required(
     "Please select whether to include Brand Name"
   ),
@@ -38,7 +38,7 @@ const Industry = () => {
     category,
     setMutate,
   }: any = useContext(MultiStepFormContext);
-
+  console.log(category,"category");
   const [showBrandNameInput, setShowBrandNameInput] = useState(false);
 
   // handle click for the create the category.
@@ -57,7 +57,8 @@ const Industry = () => {
         body: JSON.stringify({ subCategoryName: inputValue }),
       });
       setMutate(true);
-      setFieldValue("industryCategory", inputValue);
+      //setFieldValue("industryCategory", inputValue);
+      setFieldValue("industryCategory", `${newValue?.label}-${newValue?.group}`);
     } catch (error) {
       console.error("Error creating subcategory:", error);
       // Handle error (e.g., show a user-friendly message)
@@ -66,13 +67,17 @@ const Industry = () => {
 
   //Handle submit industry form
   const IndustryFormSubmit = (values: any) => {
+    console.log(values);
     // You can handle form submission here
     setIndustryDetails(values);
     // Call next() to proceed to the next step
-    if (values.hasBrandName === "no") {
+    if (values.hasBrandName === "yes") {
+      values.brandNameSearchtext = values.brandName;
+      values.hasBrandName = 'no';
       next(1);
     } else {
-      next(2);
+      //next(2);
+      next(1);
     }
   };
 
@@ -150,10 +155,9 @@ const Industry = () => {
                     onCreateOption={(inputValue) =>
                       handleCategoryCreate(inputValue, setFieldValue)
                     }
-                    onChange={(newValue: any) => {
-                      console.log("newValue", newValue);
-
-                      setFieldValue("industryCategory", newValue?.label);
+                    onChange={(newValue) => {
+                      console.log(newValue?.group);
+                      setFieldValue("industryCategory", `${newValue?.label}-${newValue?.group}`);
                     }}
                     placeholder="Please provide a brief description of the industry"
                   />
@@ -256,6 +260,7 @@ const Industry = () => {
                       <TextInput
                         placeholder="Type your brand name"
                         name="brandName"
+                        //onChange={e => {handleChange; }}
                         onChange={handleChange}
                         value={values.brandName}
                       />

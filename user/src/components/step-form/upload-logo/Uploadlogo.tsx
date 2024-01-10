@@ -185,11 +185,12 @@ const UploadLogo = () => {
                 <button
                   className="btnprev btn"
                   onClick={() => {
-                    if (Industrydetails.hasBrandName == "no") {
-                      prev(1);
-                    } else {
-                      prev(0);
-                    }
+                    // if (Industrydetails.hasBrandName == "no") {
+                    //   prev(1);
+                    // } else {
+                    //   prev(1);
+                    // }
+                    prev(1);
                   }}
                 >
                   <a>Back</a>

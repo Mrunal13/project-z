@@ -28,7 +28,9 @@ export default async function handler(
     const { industryCategory, industrySubCategory } = req.body;
 
     // Validate required data
-    if (!industryCategory || !industrySubCategory) {
+    if (!industryCategory
+      // || !industrySubCategory
+    ) {
       return res.status(400).json({ message: "Bad Request: Missing data" });
     }
 
@@ -66,13 +68,12 @@ export default async function handler(
 
     // Poll until the run is completed
     while (runStatus.status !== "completed") {
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       runStatus = await checkOpenAIRunStatus({ threadId, runId });
     }
-
     // Step 6: Get OpenAI Response
     const response = await getOpenAIResponse({ threadId });
-
+    //console.log(response.data[0].content[0].text.value,'generatePromptForBusinessName');
     // Return the OpenAI response
     return res.status(200).json(response);
   } catch (error: any) {

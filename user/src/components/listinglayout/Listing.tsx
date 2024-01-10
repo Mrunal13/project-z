@@ -2,8 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button, Modal, OverlayTrigger, Popover } from "react-bootstrap";
 import MultiStepFormContext from "@/provider/MultiStepForm";
-import React from "react";
-
 
 const Listing = ({
   data,
@@ -16,11 +14,12 @@ const Listing = ({
   setSelectedBrand,
   setSelectedDomain,
 }: any) => {
-  console.log("data", data);
+  //console.log("data", data);
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
   const [currentPopover, setCurrentPopover] = useState(null);
-  console.log("currentPopover", currentPopover);
+  //console.log("currentPopover", currentPopover);
+  const microUnitsToDollars = (microUnits) => (microUnits / 1000000).toFixed(2);
 
   const handleDomainSelect = (brandName: any, domain: any) => {
     setBrandName(brandName);
@@ -43,23 +42,13 @@ const Listing = ({
         Best Name <span className="style-title "> suggestions</span>
       </div>
       <div className="brandName-List-wrapper">
-        // {data.length ? (
-        //   data?.map((list: any, index: any) => {
-        //     const brandName = Object.keys(list)[0];
-        //     const domains = list[brandName].domains;
+        {data.length ? (
+          data?.map((list: any, index: any) => {
+            const brandName = Object.keys(list)[0];
+            const domains = list[brandName].domains;
 
             return (
               <OverlayTrigger
-        {data &&
-          data?.map((list: any, index: any) => (
-            <React.Fragment key={index}>
-              <input
-                type="hidden"
-                name="selectedBrandName"
-                value={values.brandName}
-                onChange={handleChange}
-              />
-              <div
                 key={index}
                 container={this}
                 trigger="click"
@@ -80,9 +69,13 @@ const Listing = ({
                     <div className="grid-class ps-4 pe-4">
                       {domains.map((domain: any, index: any) => (
                         <div
-                          className="listing-domain-wrapper"
-                          onClick={() =>
-                            handleDomainSelect(brandName, domain.domain)
+                          className={`listing-domain-wrapper ${domain.available ? 'active' : 'inactive'}`}
+                          onClick={() =>{
+                            const element = document.querySelector('.listing-domain-wrapper');
+                            if (element && element.classList.contains('active')) {
+                              handleDomainSelect(brandName, domain.domain)
+                            }
+                          }
                           }
                           style={{
                             background:
@@ -98,6 +91,7 @@ const Listing = ({
                                 alt="check-circle-broken"
                                 height={20}
                                 width={20}
+                                className="green"
                                 style={{ color: "green" }}
                               />
                             ) : (
@@ -106,25 +100,17 @@ const Listing = ({
                                 alt="check-circle-broken"
                                 height={20}
                                 width={20}
+                                className="red"
                                 style={{ color: "green" }}
                               />
                             )}
 
-                            <h6 key={index}>{domain.domain}</h6>
+                            <h6 key={domain.domain}>{domain.domain}</h6>
                           </div>
                           <div className="domain-desc">
-                            {domain.currency && (
-                              <p>
-                                <b>Currency </b>
-                                {domain.currency}
-                              </p>
-                            )}
-                            {domain.price && (
-                              <p>
-                                <b>Price </b>
-                                {domain.price}
-                              </p>
-                            )}
+                            <p>
+                              {domain.price && <span>$ {microUnitsToDollars(domain.price)}</span>}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -156,13 +142,6 @@ const Listing = ({
         ) : (
           <p>Loading.........</p>
         )}
-        {{-- 
-                <h5 className="list-title">{list.title}</h5>
-                <p className="description">{list.description}</p>
-              </div>
-            </React.Fragment>
-            --}}
-          ))}
       </div>
       {/* {BrandNameobj && (
         <Modal show={BrandNameobj} onHide={handleClose}>

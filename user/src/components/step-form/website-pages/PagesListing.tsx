@@ -1,9 +1,9 @@
 import { ErrorMessage, Formik } from "formik";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 import Image from "next/image";
 
-const Pages = [
+let Pages = [
   {
     name: "Home",
     desc: "Discover the story, vision and mission.",
@@ -20,26 +20,26 @@ const Pages = [
     name: "FAQs",
     desc: "Discover the story, vision and mission.",
   },
-  {
-    name: "Sitemap",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "Products",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "Terms & Conditions",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "Privacy Policy",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "Blog",
-    desc: "Discover the story, vision and mission.",
-  },
+  // {
+  //   name: "Sitemap",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "Products",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "Terms & Conditions",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "Privacy Policy",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "Blog",
+  //   desc: "Discover the story, vision and mission.",
+  // },
 ];
 const validate = (values: any) => {
   const errors = {};
@@ -55,7 +55,59 @@ const validate = (values: any) => {
 const PagesListing = () => {
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
+    const [pageData, SetPageData] = useState([
+  {
+    name: "Home",
+    desc: "Discover the story, vision and mission.",
+  },
+  {
+    name: "About Us",
+    desc: "Discover the story, vision and mission.",
+  },
+  {
+    name: "Services",
+    desc: "Discover the story, vision and mission.",
+  },
+  {
+    name: "FAQs",
+    desc: "Discover the story, vision and mission.",
+  }]);
+    useEffect(() => {
+      generateSitemap();
+      // This code will run when the component is mounted
 
+      // You can perform any actions, API calls, or initializations here
+      //console.log('Component is loaded');
+      // Cleanup function (optional)
+      return () => {
+        // This code will run when the component is unmounted
+        //console.log('Component is unmounted');
+      };
+    }, []);
+  const generateSitemap = async (values: any) => {
+    const categoryList = Industrydetails.industryCategory.split('-')
+    console.log(categoryList);
+    try{
+      const response = await fetch("/api/openai/sitemap", {
+        method: "POST", // Use the appropriate HTTP method
+        headers: {
+          "Content-Type": "application/json", // Specify content type as JSON
+        },
+        body: JSON.stringify({
+          industryCategory: categoryList[1],
+          industrySubCategory: categoryList[0],
+          industry: Industrydetails.industry,
+          business: Industrydetails.business,
+          brandName: Industrydetails.brandName
+        }), // Convert data to JSON string
+      });
+      let PageList = await response.json();
+      //console.log(PageList.data[0].content[0].text.value);
+      SetPageData(JSON.parse(PageList.data[0].content[0].text.value));
+    } catch (error) {
+        console.error("Error fetching data from API:", error);
+    }
+  }
   // const handleCheckboxChange = (optionName: any) => {
   //   const selectedPages = [...Industrydetails.selectedPages];
 
@@ -81,9 +133,9 @@ const PagesListing = () => {
         <Formik
           enableReinitialize={true}
           initialValues={Industrydetails}
-          // validate={validate}
+          validate={validate}
           onSubmit={(values: any) => {
-            console.log("values", values);
+            //console.log("values", values);
             setIndustryDetails({
               ...Industrydetails,
               selectedPages: values.selectedPages,
@@ -99,8 +151,8 @@ const PagesListing = () => {
               </div>
 
               <div className="grid-class">
-                {Pages.map((option, index) => (
-                  <div key={index} className="custom-checkbox">
+                {pageData.map((option, index) => (
+                  <div key={option.name} className="custom-checkbox">
                     <label htmlFor={`selectedPages ${index}`}>
                       <div className="pages-listing_wrapper">
                         <div className="page_list_title">
@@ -158,14 +210,7 @@ const PagesListing = () => {
                 >
                   <a>Back</a>
                 </button>
-                {{-- <button className="btnnext btn" type="button"> --}}
-                <button
-                  className="btnnext btn"
-                  type="button"
-                  onClick={() => {
-                    next(7);
-                  }}
-                >
+                <button className="btnnext btn" type="submit">
                   <a>Next</a>
                 </button>
               </div>

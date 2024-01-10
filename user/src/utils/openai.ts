@@ -7,8 +7,8 @@ export const createOpenAIAssistant = async (): Promise<string> => {
   };
 
   const requestData = {
-    instructions: "",
-    name: "Project-Z",
+    instructions: "Automated website generator project",
+    name: "Project Z",
     model: "gpt-3.5-turbo",
   };
 
