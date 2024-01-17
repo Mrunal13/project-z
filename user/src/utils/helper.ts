@@ -70,7 +70,7 @@ export const generatePromptForBusinessName = ({
   industryCategory,
   industrySubCategory,
 }: BusinessNamePrompt) => {
-  const prompt = `Get creative and come up with 15 unique name for your ${industryCategory} - ${industrySubCategory} business. Each name seperated with ";" and without number text or bullet points. Also, there must not be any prefix or postfix sentence in the result.`;
+  const prompt = `Get creative and come up with 9 unique name for your ${industryCategory} - ${industrySubCategory} business. Each name seperated with ";" and without number text or bullet points. Also, there must not be any prefix or postfix sentence in the result.`;
   // const prompt = `Get creative and come up with a unique name for your ${industryCategory} - ${industrySubCategory} business.`;
 
   return prompt;

@@ -5,7 +5,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { data } = req.body;
-
+  console.log(data);
   const auth = process.env.GODADDY_API_AUTH_VALUE;
   const headers = {
     "Content-Type": "application/json",
@@ -14,7 +14,8 @@ export default async function handler(
 
   try {
     const promises = data.map(async (obj: any) => {
-      const queryParams = `query=${obj.title}&country=IN&city=delhi&tlds=co.in, co.uk, tech, org&limit=15`;
+      //console.log(obj.title);
+      const queryParams = `query=${obj.title}&country=IN&city=delhi&tlds=co.in, co.uk, tech, org&limit=10`;
 
       // First API call
       const response = await fetch(
@@ -26,12 +27,13 @@ export default async function handler(
       );
 
       if (!response.ok) {
+        //console.log(`HTTP error! Status: ${response.status}`);
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const responseData = await response.json();
       const valuesArray = responseData.map((obj: any) => obj.domain);
-
+      //console.log(valuesArray);
       // Second API call
       const secondResponse = await fetch(
         `${process.env.GODADDY_API_ENDPOINT}/domains/available`,
@@ -41,13 +43,13 @@ export default async function handler(
           body: JSON.stringify(valuesArray),
         }
       );
-
+      //console.log(secondResponse);
       if (!secondResponse.ok) {
+        //console.log(`HTTP error! Status: ${response.status}`);
         throw new Error(`HTTP error! Status: ${secondResponse.status}`);
       }
 
       const secondResponseData = await secondResponse.json();
-
       return {
         [obj.title]: secondResponseData,
       };
@@ -55,11 +57,11 @@ export default async function handler(
 
     const results = await Promise.all(promises);
 
-    console.log(results, "results");
+    //console.log(results, "results");
 
     return res.status(200).json(results);
   } catch (error) {
-    console.error("Error:", error);
+    //console.error("Errorssss:", error);
     return res.status(500).json({ message: error });
   }
 }

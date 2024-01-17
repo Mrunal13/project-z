@@ -12,6 +12,8 @@ import GenerateBrandName from "./Domain/GenerateDomainName";
 import GenerateDomainName from "./Domain/GenerateDomainName";
 import PagesListing from "./website-pages/PagesListing";
 import ColorPalette from "./color-palette";
+import PersonalDetails from "./personal-details";
+import GrapesJSEditor from "./personal-details/test";
 
 const IndustrydetailsInitialState = {
   id: "",
@@ -169,8 +171,8 @@ const MultiStepForm = () => {
             {category && (
               <>
                 <Logo />
-                {/*<Industry />*/}
-                <PagesListing />
+                <Industry />
+                {/* <GrapesJSEditor /> */}
               </>
             )}
           </>
@@ -224,6 +226,13 @@ const MultiStepForm = () => {
           <>
             <Logo />
             <ColorPalette />
+          </>
+        );
+      case 8:
+        return (
+          <>
+            <Logo />
+            <PersonalDetails />
           </>
         );
       default:

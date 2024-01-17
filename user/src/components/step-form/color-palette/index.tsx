@@ -5,45 +5,122 @@ import { Formik } from "formik";
 import { Nav, Tab } from "react-bootstrap";
 import randomColor from "randomcolor";
 import { SketchPicker } from 'react-color';
+import reactCSS from 'reactcss';
 
 const ColorPalette = () => {
+  const initialColors = [
+    '#9013FE',
+    '#F8E71C',
+    '#417505',
+    '#4A90E2'
+  ]
+  // [
+  //   { r: '241', g: '112', b: '19', a: '1' },
+  //   { r: '45', g: '187', b: '83', a: '1' },
+  //   { r: '12', g: '120', b: '241', a: '1' },
+  //   { r: '255', g: '0', b: '0', a: '1' },
+  // ];
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
   const [colors, setColor] = useState(); //randomColor({count: 6})
   const [selectPalette, setSelectColorPalette] = useState();
-  const [customColor, SetCustomColor] = useState([
-    "#EC4899",
-    "#67C9FA",
-    "#2DD4BF",
-    "#D0996E",
-  ]);
+  const [customColor, SetCustomColor] = useState(initialColors);
+  // ["#EC4899","#67C9FA","#2DD4BF","#D0996E",]
 
-  const handleClick = () => {
-    setDisplayColorPicker(!displayColorPicker);
+  const [displayColorPicker, setDisplayColorPicker] = useState(Array(initialColors.length).fill(false));
+  const [selectedColorIndex, setSelectedColorIndex] = useState(null);
+
+    const handleClick = (index) => {
+    setDisplayColorPicker((prevDisplay) =>
+      prevDisplay.map((item, i) => (i === index ? !item : item))
+    );
+    setSelectedColorIndex(index);
   };
 
   const handleClose = () => {
-    setDisplayColorPicker(false);
+    setDisplayColorPicker(Array(initialColors.length).fill(false));
+    setSelectedColorIndex(null);
   };
 
   const handleChange = (newColor) => {
-    setColor(newColor.rgb);
+    console.log(newColor.hex);
+    const updatedColors = [...customColor];
+    updatedColors[selectedColorIndex] = newColor.hex;
+    SetCustomColor(updatedColors);
+    setIndustryDetails((prevdata: any) => ({
+      ...prevdata,
+      selectedColorPalatte: huecolor,
+    }));
+  };
+
+  const renderColorSwatch = (index) => {
+    const styles = reactCSS({
+      'default': {
+        color: {
+          width: '250px',
+          height: '50px',
+          borderRadius: '2px',
+          background: `${customColor[index]}`,
+          margin: '5px',
+        },
+        swatch: {
+          padding: '0px',
+          background: '#fff',
+          borderRadius: '0px',
+          boxShadow: '0 0 0 0px rgba(0,0,0,.1)',
+          display: 'block',
+          cursor: 'pointer',
+        },
+        popover: {
+          position: 'absolute',
+          zIndex: '2',
+        },
+        cover: {
+          position: 'fixed',
+          top: '0px',
+          right: '0px',
+          bottom: '0px',
+          left: '0px',
+        },
+      },
+    });
+
+    return (
+      <div key={index} style={styles.swatch} onClick={() => handleClick(index)}>
+        <div style={styles.color} />
+        {displayColorPicker[index] ? (
+          <div style={styles.popover}>
+            <div style={styles.cover} onClick={handleClose} />
+            <SketchPicker color={customColor[selectedColorIndex] || {}} onChange={handleChange} />
+          </div>
+        ) : null}
+      </div>
+    );
   };
   
   const generateColors = async () => {
     var color = randomColor({
+      luminosity: 'dark',
       count: 6,
     });
     let finalColors = [];
-    if (color) {
-      color.forEach((maincolor, index) => {
-        var hueColors = randomColor({
-          count: 4,
-          hue: maincolor,
+    //try{
+      if (color) {
+        //console.log(color.length,'colors-items');
+        color.forEach((maincolor, index) => {
+          var hueColors = randomColor({
+            count: 4,
+            hue: maincolor,
+            //luminosity: 'random'
+          });
+          finalColors.push(hueColors);
         });
-        finalColors.push(hueColors);
-      });
-    }
+      }
+    // } catch (error) {
+    //   //generateColors();
+    //   //console.error("Error generating color palettes:", error);
+    //   // Handle error (e.g., show a user-friendly message)
+    // }
     //console.log(finalColor);
     setColor(finalColors);
   };
@@ -55,8 +132,11 @@ const ColorPalette = () => {
 
   const handleSelectColorPalette = (index: any, e: any, huecolor: any) => {
     // e.preventDefault();
-    //console.log(huecolor);
     setSelectColorPalette(index);
+    setIndustryDetails((prevdata: any) => ({
+      ...prevdata,
+      selectedColorPalatte: huecolor,
+    }));
   };
   return (
     <div className="mainsection ">
@@ -175,8 +255,10 @@ const ColorPalette = () => {
                     </Tab.Content>
                     <Tab.Content>
                       <Tab.Pane eventKey="custom">
-                      <SketchPicker />
                         <div className="custom-color-main">
+                          <div>{customColor.map((_, index) => renderColorSwatch(index))}</div>
+                        </div>
+                        {/*<div className="custom-color-main">
                         {customColor?.map((customColor) => {
                           return (
                             <div
@@ -187,7 +269,7 @@ const ColorPalette = () => {
                             ></div>
                           );
                         })}
-                        </div>
+                        </div>*/}
                       </Tab.Pane>
                     </Tab.Content>
                   </div>

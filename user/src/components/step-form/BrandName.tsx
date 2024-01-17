@@ -104,96 +104,135 @@ const BrandName = () => {
 
   useEffect(() => {
     if (Industrydetails.brandNameSearchResults) {
+      Industrydetails.brandNameSearchtext = 'test';
       SetDomainData(Industrydetails.brandNameSearchResults);
     }
   }, [Industrydetails]);
 
+  useEffect(() => {
+    if (Industrydetails.brandNameSearchResults.length == 0) {
+      generateBrandName();
+    }
+  },[]);
+
   const generateBrandName = async (values: any) => {
 
-    // try {
-    //   const response = await fetch("/api/godaddy/domains", {
-    //     method: "POST", // Use the appropriate HTTP method
-    //     headers: {
-    //       "Content-Type": "application/json", // Specify content type as JSON
-    //     },
-    //     body: JSON.stringify({ data: datas }), // Convert data to JSON string
-    //   });
-    //   const data = await response.json();
-    //   SetDomainData(data);
-    //   // Process the API response data as needed
-    //   console.log(data);
+    if (Industrydetails.hasBrandName == "yes" && Industrydetails.hasDomain == "no"){
+      if (!Industrydetails.brandName){
+        prev(0);
+      }
+        // console.log('sdfdsaf');
+        // return;
+        try {
+          console.log(Industrydetails.brandName);
+          //Domain API
+          datas = [
+            {
+              id: 1,
+              title: `${Industrydetails.brandName}`,
+              description: "Domain Available",
+            },
+          ];
+          const response = await fetch("/api/godaddy/domains", {
+            method: "POST", // Use the appropriate HTTP method
+            headers: {
+              "Content-Type": "application/json", // Specify content type as JSON
+            },
+            body: JSON.stringify({ data: datas }), // Convert data to JSON string
+          });
+          const data = await response.json();
+          //console.log(data);
+          SetDomainData(data);
+          // Process the API response data as needed
+          //console.log(data);
 
-    //   SetNameSerch(values.brandNameSearchtext);
-    //   setIndustryDetails((prevdata: any) => ({
-    //     ...prevdata,
-    //     brandNameSearchtext: values.brandNameSearchtext,
-    //     brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
-    //   }));
-    // } catch (error) {
-    //   console.error("Error fetching data from API:", error);
-    // }
-
-    try{
-      const setBrandNameToBeSearched = values.brandNameSearchtext;
-      SetDomainData([]);
-      // Domain API
-      const categoryList = Industrydetails.industryCategory.split('-')
-      const response = await fetch("/api/openai/assistant", {
-        method: "POST", // Use the appropriate HTTP method
-        headers: {
-          "Content-Type": "application/json", // Specify content type as JSON
-        },
-        body: JSON.stringify({
-        "industryCategory": categoryList[1],
-        "industrySubCategory": categoryList[0]}), // Convert data to JSON string
-      });
-      const data = await response.json();
-      //SetDomainData(data);
-      // Process the API response data as needed
-      const inputData = data.data[0].content[0].text.value;
-      const arrayOfNames= inputData.split(';');
-      const datas = arrayOfNames.map((name, index) => ({
-        id: index + 1,
-        title: name,
-        description: "Domain Available",
-      }));
-      //datas = JSON.parse(inputData);
-      //console.log(JSON.parse(JSON.stringify(data.data[0].content[0].text.value)));
+          SetNameSerch(values.brandNameSearchtext);
+          setIndustryDetails((prevdata: any) => ({
+            ...prevdata,
+            brandNameSearchtext: values.brandNameSearchtext,
+            brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
+          }));
+          console.log(Domaindata);
+          console.log(values.brandNameSearchResults);
+        } catch (error) {
+          console.error("Error fetching data from API:", error);
+        }
+    }else{
       try {
-        //console.log(datas);
-        //Domain API
-        const response = await fetch("/api/godaddy/domains", {
+        const setBrandNameToBeSearched = Industrydetails.brandNameSearchtext;
+        SetDomainData([]);
+        // Domain API
+        const categoryList = Industrydetails.industryCategory.split("-");
+        const response = await fetch("/api/openai/assistant", {
           method: "POST", // Use the appropriate HTTP method
           headers: {
             "Content-Type": "application/json", // Specify content type as JSON
           },
-          body: JSON.stringify({ data: datas }), // Convert data to JSON string
+          body: JSON.stringify({
+            industryCategory: categoryList[1],
+            industrySubCategory: categoryList[0],
+          }), // Convert data to JSON string
         });
         const data = await response.json();
-        //console.log(data);
-        SetDomainData(data);
+        //SetDomainData(data);
         // Process the API response data as needed
-        //console.log(data);
+        const inputData = data.data[0].content[0].text.value;
+        const arrayOfNames = inputData.split(";");
+        const datas = arrayOfNames
+          .map((name, index) => {
+            if (name) {
+              // Checks if 'name' is not empty, null, or undefined
+              return {
+                id: index + 1,
+                title: `${name}`,
+                description: "Domain Available",
+              };
+            } else {
+              // Handle the case where 'name' is empty.
+              // You can return null or a specific object structure, depending on your requirements.
+              return null; // or any other handling logic
+            }
+          })
+          .filter((item) => item != null);
+        //console.log(datas);
+        //datas = JSON.parse(inputData);
+        //console.log(JSON.parse(JSON.stringify(data.data[0].content[0].text.value)));
+        try {
+          //console.log(datas);
+          //Domain API
+          const response = await fetch("/api/godaddy/domains", {
+            method: "POST", // Use the appropriate HTTP method
+            headers: {
+              "Content-Type": "application/json", // Specify content type as JSON
+            },
+            body: JSON.stringify({ data: datas }), // Convert data to JSON string
+          });
+          const data = await response.json();
+          //console.log(data);
+          SetDomainData(data);
+          // Process the API response data as needed
+          //console.log(data);
 
-        SetNameSerch(values.brandNameSearchtext);
-        setIndustryDetails((prevdata: any) => ({
-          ...prevdata,
-          brandNameSearchtext: values.brandNameSearchtext,
-          brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
-        }));
-        console.log(Domaindata);
-        console.log(values.brandNameSearchResults);
+          SetNameSerch(Industrydetails.brandNameSearchtext);
+          setIndustryDetails((prevdata: any) => ({
+            ...prevdata,
+            brandNameSearchtext: Industrydetails.brandNameSearchtext,
+            brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
+          }));
+          console.log(Domaindata);
+          console.log(values.brandNameSearchResults);
+        } catch (error) {
+          console.error("Error fetching data from API:", error);
+        }
+        // SetNameSerch(values.brandNameSearchtext);
+        // setIndustryDetails((prevdata: any) => ({
+        //   ...prevdata,
+        //   brandNameSearchtext: values.brandNameSearchtext,
+        //   brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
+        // }));
       } catch (error) {
         console.error("Error fetching data from API:", error);
       }
-      // SetNameSerch(values.brandNameSearchtext);
-      // setIndustryDetails((prevdata: any) => ({
-      //   ...prevdata,
-      //   brandNameSearchtext: values.brandNameSearchtext,
-      //   brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
-      // }));
-    } catch (error) {
-      console.error("Error fetching data from API:", error);
     }
   };
 
@@ -227,7 +266,7 @@ const BrandName = () => {
                 </div>
               )}
               <div className="input-group">
-                <Image
+                {/* <Image
                   src={"/images/search-icon.svg"}
                   width={19}
                   height={19}
@@ -238,7 +277,7 @@ const BrandName = () => {
                   name="brandNameSearchtext"
                   onChange={handleChange}
                   value={values.brandNameSearchtext}
-                />
+                /> */}
 
                 <div className="input-group-append">
                   <button

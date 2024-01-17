@@ -19,7 +19,7 @@ export default async function handler(
           { subCategory: "asc" }, // Then order by subcategory
         ],
       });
-      console.log(categoriesWithSubcategories);
+      //console.log(categoriesWithSubcategories);
       res.status(200).json(categoriesWithSubcategories);
     } catch (error) {
       console.error("Error fetching categories:", error);

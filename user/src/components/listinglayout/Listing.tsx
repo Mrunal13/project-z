@@ -35,7 +35,11 @@ const Listing = ({
     // If needed, close the popover or perform any other actions here
     // setBrandName(""); // Reset the brand name state after selection
   };
-
+  const popoverClickRootClose = (
+    <Popover id="popover-trigger-click-root-close" title="Popover bottom">
+      <strong>Holy guacamole!</strong> Check this info.
+    </Popover>
+  );
   return (
     <>
       <div className="title-dashboard mt-4 text-center">
@@ -52,10 +56,10 @@ const Listing = ({
                 key={index}
                 container={this}
                 trigger="click"
-                rootClose={true}
+                rootClose
                 // trigger={["hover", "focus"]}
                 placement="bottom"
-                show={currentPopover === index}
+                //show={currentPopover === index}
                 overlay={
                   <Popover
                     id="popover-basic"
@@ -63,20 +67,26 @@ const Listing = ({
                     arrowOffsetTop={0}
                     title="Popover bottom"
                     // show={currentPopover === index}
-                    // rootClose={true} // Close popover when clicking outside
-                    // onHide={() => setCurrentPopover(null)}
+                    //rootClose={true} // Close popover when clicking outside
+                    //onHide={() => setCurrentPopover(null)}
                   >
                     <div className="grid-class ps-4 pe-4">
                       {domains.map((domain: any, index: any) => (
                         <div
-                          className={`listing-domain-wrapper ${domain.available ? 'active' : 'inactive'}`}
-                          onClick={() =>{
-                            const element = document.querySelector('.listing-domain-wrapper');
-                            if (element && element.classList.contains('active')) {
-                              handleDomainSelect(brandName, domain.domain)
+                          className={`listing-domain-wrapper ${
+                            domain.available ? "active" : "inactive"
+                          }`}
+                          onClick={() => {
+                            const element = document.querySelector(
+                              ".listing-domain-wrapper"
+                            );
+                            if (
+                              element &&
+                              element.classList.contains("active")
+                            ) {
+                              handleDomainSelect(brandName, domain.domain);
                             }
-                          }
-                          }
+                          }}
                           style={{
                             background:
                               selectedDomain === domain.domain ? "#EBEBEB" : "",
@@ -109,7 +119,11 @@ const Listing = ({
                           </div>
                           <div className="domain-desc">
                             <p>
-                              {domain.price && <span>$ {microUnitsToDollars(domain.price)}</span>}
+                              {domain.price && (
+                                <span>
+                                  $ {microUnitsToDollars(domain.price)}
+                                </span>
+                              )}
                             </p>
                           </div>
                         </div>

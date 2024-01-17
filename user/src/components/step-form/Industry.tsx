@@ -38,7 +38,7 @@ const Industry = () => {
     category,
     setMutate,
   }: any = useContext(MultiStepFormContext);
-  console.log(category,"category");
+  console.log(Industrydetails);
   const [showBrandNameInput, setShowBrandNameInput] = useState(false);
 
   // handle click for the create the category.
@@ -73,9 +73,13 @@ const Industry = () => {
     // Call next() to proceed to the next step
     if (values.hasBrandName === "yes") {
       values.brandNameSearchtext = values.brandName;
-      values.hasBrandName = 'no';
-      next(1);
-    } else {
+      if (values.hasDomain === "no") {
+        next(1);
+      }else{
+        //values.hasBrandName = 'no';
+        next(2);
+      }
+    }else {
       //next(2);
       next(1);
     }
@@ -145,19 +149,24 @@ const Industry = () => {
                     name="industryCategory"
                     isClearable
                     options={category}
+                    //data={Industrydetails.industryCategory?.split("-")[1]}
                     onFocus={handleFocus}
                     value={category
                       .flatMap((category: any) => category.options)
                       .find(
                         (option: any) =>
-                          option?.label === values.industryCategory
+                          option?.label ===
+                          values.industryCategory?.split("-")[0]
                       )}
                     onCreateOption={(inputValue) =>
                       handleCategoryCreate(inputValue, setFieldValue)
                     }
                     onChange={(newValue) => {
-                      console.log(newValue?.group);
-                      setFieldValue("industryCategory", `${newValue?.label}-${newValue?.group}`);
+                      console.log(Industrydetails);
+                      setFieldValue(
+                        "industryCategory",
+                        `${newValue?.label}-${newValue?.group}`
+                      );
                     }}
                     placeholder="Please provide a brief description of the industry"
                   />
@@ -249,7 +258,7 @@ const Industry = () => {
                   </FieldArray> */}
                   <div>
                     <RadioButtonGroup
-                      label="Brand Name"
+                      label="Do you have Brand Name?"
                       name="hasBrandName"
                       options={[
                         { value: "yes", label: "Yes" },
@@ -263,6 +272,27 @@ const Industry = () => {
                         //onChange={e => {handleChange; }}
                         onChange={handleChange}
                         value={values.brandName}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    {values.hasBrandName === "yes" && (
+                      <RadioButtonGroup
+                        label="Do you have Domain?"
+                        name="hasDomain"
+                        options={[
+                          { value: "yes", label: "Yes" },
+                          { value: "no", label: "No" },
+                        ]}
+                      />
+                    )}
+                    {values.hasDomain === "yes" && (
+                      <TextInput
+                        placeholder="Type your domain name"
+                        name="domainName"
+                        //onChange={e => {handleChange; }}
+                        onChange={handleChange}
+                        value={values.domainName}
                       />
                     )}
                   </div>
