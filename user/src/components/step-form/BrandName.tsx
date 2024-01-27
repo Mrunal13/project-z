@@ -96,6 +96,7 @@ const BrandName = () => {
   const [nameSearch, SetNameSerch] = useState(
     Industrydetails.brandNameSearchtext
   );
+  const [loader, SetLoader] = useState(false);
   const [brandName, setBrandName] = useState("");
   const [Domaindata, SetDomainData] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState(null);
@@ -107,10 +108,18 @@ const BrandName = () => {
       Industrydetails.brandNameSearchtext = 'test';
       SetDomainData(Industrydetails.brandNameSearchResults);
     }
+    //generateBrandName();
   }, [Industrydetails]);
 
   useEffect(() => {
     if (Industrydetails.brandNameSearchResults.length == 0) {
+      generateBrandName();
+    }
+    if (
+      (Industrydetails.hasDomain == "no" &&
+        Industrydetails.hasBrandName == "yes") ||
+      Industrydetails.brandNameSearchResults.length > 0
+    ) {
       generateBrandName();
     }
   },[]);
@@ -124,7 +133,8 @@ const BrandName = () => {
         // console.log('sdfdsaf');
         // return;
         try {
-          console.log(Industrydetails.brandName);
+          SetLoader(true);
+          //console.log(Industrydetails.brandName);
           //Domain API
           datas = [
             {
@@ -145,20 +155,22 @@ const BrandName = () => {
           SetDomainData(data);
           // Process the API response data as needed
           //console.log(data);
-
-          SetNameSerch(values.brandNameSearchtext);
+          SetLoader(false);
+          //SetNameSerch(values.brandNameSearchtext);
           setIndustryDetails((prevdata: any) => ({
             ...prevdata,
-            brandNameSearchtext: values.brandNameSearchtext,
+            //brandNameSearchtext: values.brandNameSearchtext,
             brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
           }));
-          console.log(Domaindata);
-          console.log(values.brandNameSearchResults);
+          
+          //console.log(Domaindata);
+          console.log(Industrydetails.brandNameSearchResults);
         } catch (error) {
           console.error("Error fetching data from API:", error);
         }
     }else{
       try {
+        SetLoader(true);
         const setBrandNameToBeSearched = Industrydetails.brandNameSearchtext;
         SetDomainData([]);
         // Domain API
@@ -198,6 +210,7 @@ const BrandName = () => {
         //datas = JSON.parse(inputData);
         //console.log(JSON.parse(JSON.stringify(data.data[0].content[0].text.value)));
         try {
+          //SetLoader(true);
           //console.log(datas);
           //Domain API
           const response = await fetch("/api/godaddy/domains", {
@@ -212,15 +225,16 @@ const BrandName = () => {
           SetDomainData(data);
           // Process the API response data as needed
           //console.log(data);
-
+          SetLoader(false);
           SetNameSerch(Industrydetails.brandNameSearchtext);
           setIndustryDetails((prevdata: any) => ({
             ...prevdata,
             brandNameSearchtext: Industrydetails.brandNameSearchtext,
             brandNameSearchResults: data, // Assuming the API response is an array of objects similar to your 'data' array
           }));
-          console.log(Domaindata);
-          console.log(values.brandNameSearchResults);
+          
+          //console.log(Domaindata);
+          //console.log(values.brandNameSearchResults);
         } catch (error) {
           console.error("Error fetching data from API:", error);
         }
@@ -260,11 +274,17 @@ const BrandName = () => {
         >
           {({ handleSubmit, handleChange, values, setFieldValue }) => (
             <form onSubmit={handleSubmit} className="brandnameform">
-              {!nameSearch && (
+              {/* {!nameSearch && (
                 <div className="title-dashboard">
                   <span className="style-title">Brand Name </span>Generator
                 </div>
-              )}
+              )} */}
+              <div className="title-dashboard mt-4 text-center">
+                Best{" "}
+                {Industrydetails.hasBrandName == "yes" ? "Domain" : "Brand"}{" "}
+                Name 
+                <span className="style-title "> Suggestions</span>
+              </div>
               <div className="input-group">
                 {/* <Image
                   src={"/images/search-icon.svg"}
@@ -278,7 +298,6 @@ const BrandName = () => {
                   onChange={handleChange}
                   value={values.brandNameSearchtext}
                 /> */}
-
                 <div className="input-group-append">
                   <button
                     type="button"
@@ -291,14 +310,17 @@ const BrandName = () => {
                 </div>
               </div>
               <div>
-                {!nameSearch && (
-                  <h2 className={s.craft_text}>
-                    {" "}
-                    Craft a distinctive business identity with a name that sets
-                    you apart.{" "}
-                  </h2>
+                {loader == true && (
+                  // <h2 className={s.craft_text}>
+                  //   {" "}
+                  //   Craft a distinctive business identity with a name that sets
+                  //   you apart.{" "}
+                  // </h2>
+                  <div class="cup">
+                    <div class="handle"></div>
+                  </div>
                 )}
-                {nameSearch && (
+                {nameSearch && loader == false && (
                   <>
                     <Listing
                       data={Domaindata || values.brandNameSearchResults}

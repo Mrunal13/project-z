@@ -49,8 +49,10 @@ const ColorPalette = () => {
     SetCustomColor(updatedColors);
     setIndustryDetails((prevdata: any) => ({
       ...prevdata,
-      selectedColorPalatte: huecolor,
+      selectedColorPaletteOption: "1",
+      colorPaletteCustomOption: updatedColors,
     }));
+    //console.log(Industrydetails);
   };
 
   const renderColorSwatch = (index) => {
@@ -135,8 +137,10 @@ const ColorPalette = () => {
     setSelectColorPalette(index);
     setIndustryDetails((prevdata: any) => ({
       ...prevdata,
+      selectedColorPaletteOption: "0",
       selectedColorPalatte: huecolor,
     }));
+    console.log(Industrydetails);
   };
   return (
     <div className="mainsection ">
@@ -201,10 +205,10 @@ const ColorPalette = () => {
                         <div className="color-row">
                           {colors &&
                             colors?.map((maincolor: any, index: any) => {
-                                // let huecolor = randomColor({
-                                //   count: 4,
-                                //   hue: maincolor,
-                                // });
+                              // let huecolor = randomColor({
+                              //   count: 4,
+                              //   hue: maincolor,
+                              // });
                               //console.log("huecolor", maincolor);
 
                               return (
@@ -214,7 +218,11 @@ const ColorPalette = () => {
                                     selectPalette === index ? "selected" : ""
                                   }`}
                                   onClick={(e) =>
-                                    handleSelectColorPalette(index, e,maincolor)
+                                    handleSelectColorPalette(
+                                      index,
+                                      e,
+                                      maincolor
+                                    )
                                   }
                                 >
                                   {Array.isArray(maincolor) &&
@@ -251,12 +259,16 @@ const ColorPalette = () => {
                             />
                           </button>
                         </div>
-                      </Tab.Pane>   
+                      </Tab.Pane>
                     </Tab.Content>
                     <Tab.Content>
                       <Tab.Pane eventKey="custom">
                         <div className="custom-color-main">
-                          <div>{customColor.map((_, index) => renderColorSwatch(index))}</div>
+                          <div>
+                            {customColor.map((_, index) =>
+                              renderColorSwatch(index)
+                            )}
+                          </div>
                         </div>
                         {/*<div className="custom-color-main">
                         {customColor?.map((customColor) => {
@@ -278,12 +290,17 @@ const ColorPalette = () => {
                   <button
                     className="btnprev btn"
                     onClick={() => {
-                      prev(6);
+                      prev(4);
                     }}
                   >
                     <a>Back</a>
                   </button>
-                  <button className="btnnext btn">
+                  <button
+                    className="btnnext btn"
+                    onClick={() => {
+                      prev(6);
+                    }}
+                  >
                     <a>Next</a>
                   </button>
                 </div>

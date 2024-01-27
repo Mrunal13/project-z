@@ -72,7 +72,7 @@ const GradientBoxes = ({
 
   useEffect(() => {
     const colors: ColorDetails[] = [];
-    const numColors: number = 5;
+    const numColors: number = 3;
     const rotationIncrement = 360 / numColors;
     for (let i = 0; i < numColors; i++) {
       const percentage = (i + 1) * (100 / numColors);

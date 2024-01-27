@@ -29,9 +29,37 @@ const UploadLogo = () => {
       hasBrandLogo: value,
     }));
   };
-  const handleImageChange = (e: any, setFieldValue: any) => {
+  const handleImageChange = async (e: any, setFieldValue: any) => {
     const file = e.target.files[0];
-
+    console.log(file);
+    try {
+      //Upload Image API
+      
+      var formdata = new FormData();
+      //formdata.append("image", e.target.files);
+      formdata.append("image", file);
+      //formdata.append('imageName',file.name);
+      //console.log(formdata);
+      const response = await fetch("/api/imageUpload", {
+        method: "POST", // Use the appropriate HTTP method
+        // headers: {
+        //   "Content-Type": "application/json", // Specify content type as JSON
+        // },
+        body: formdata, // Convert data to JSON string
+      });
+      const data = await response.json();
+      if(data.uniqueFileName){
+        setIndustryDetails((prevdata: any) => ({
+          ...prevdata,
+          hasBrandLogo: "yes",
+          brandLogoImportUrl:
+            window.location.origin + "/uploads/" + data.uniqueFileName,
+        }));
+      }
+      console.log(Industrydetails);
+    } catch (error) {
+      //console.error("Error fetching data from API:", error);
+    }
     if (file) {
       //   setSelectedImage(file);
       setFieldValue("brandLogoIcon", file);

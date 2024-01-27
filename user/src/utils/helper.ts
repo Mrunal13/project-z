@@ -76,5 +76,16 @@ export const generatePromptForBusinessName = ({
   return prompt;
 };
 
+export const generatePromptForBusinessLogo = ({
+  brandName,
+  industryCategory,
+  industrySubCategory,
+}: BusinessNamePrompt) => {
+  const prompt = `Get creative and come up with 9 unique name for your ${industryCategory} - ${industrySubCategory} business. Each name seperated with ";" and without number text or bullet points. Also, there must not be any prefix or postfix sentence in the result.`;
+  // Design a logo for [BrandName] that includes the brand name in the design. The style should be modern with clean lines and a minimalist aesthetic. Use ${industryCategory} - ${industrySubCategory}  centric colors. The font should be modern and readable, with a slight organic feel to match the ${industryCategory} - ${industrySubCategory} theme. Include an abstract symbol in the logo.
+
+  return prompt;
+};
+
 export const brandNameInstructions =
   "Please provide 10 name based on the users requirements.";

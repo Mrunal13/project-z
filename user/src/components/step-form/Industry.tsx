@@ -28,7 +28,19 @@ const validationSchema = Yup.object().shape({
       schema.required("Brand Name is required when including it"),
     otherwise: (schema) => schema,
   }),
+  hasDomain: Yup.string().when("hasBrandName", {
+    is: (value: any) => value === "yes",
+    then: (schema) => schema.required("Domain option is required"),
+    otherwise: (schema) => schema,
+  }),
+  domainName: Yup.string().when(["hasBrandName", "hasDomain"], {
+    is: (values) => values[0] == "yes" && values[1] == "yes",
+    then: Yup.string().required("Domain name is required"),
+    otherwise: (schema) => schema,
+  }),
 });
+var ErrorKey = '';
+
 const Industry = () => {
   const {
     Industrydetails,
@@ -286,21 +298,28 @@ const Industry = () => {
                         ]}
                       />
                     )}
-                    {values.hasDomain === "yes" && (
-                      <TextInput
-                        placeholder="Type your domain name"
-                        name="domainName"
-                        //onChange={e => {handleChange; }}
-                        onChange={handleChange}
-                        value={values.domainName}
-                      />
-                    )}
+                    {values.hasDomain === "yes" &&
+                      values.hasBrandName === "yes" && (
+                        <TextInput
+                          placeholder="Type your domain name"
+                          name="domainName"
+                          //onChange={e => {handleChange; }}
+                          onChange={handleChange}
+                          value={values.domainName}
+                        />
+                      )}
                   </div>
-                  {/* {Object.keys(errors).length > 0 && (
-                      <div className="form-error">
-                        Please fill All the information
-                      </div>
-                    )} */}
+                  {Object.keys(errors).length > 0 && (
+                    <div className="form-error">
+                      {Object.keys(errors).map((key, index) => {
+                        // Only show the error if the field has been touched
+                        if (index == 0 || touched[key]) {
+                          return <span key={index}>{errors[key]}</span>;
+                        }
+                        return null;
+                      })}
+                    </div>
+                  )}
 
                   <div className="btnwrapper ">
                     <button className="btnnext btn" type="submit">

@@ -4,22 +4,22 @@ import MultiStepFormContext from "@/provider/MultiStepForm";
 import Image from "next/image";
 
 let Pages = [
-  {
-    name: "Home",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "About Us",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "Services",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "FAQs",
-    desc: "Discover the story, vision and mission.",
-  },
+  // {
+  //   name: "Home",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "About Us",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "Services",
+  //   desc: "Discover the story, vision and mission.",
+  // },
+  // {
+  //   name: "FAQs",
+  //   desc: "Discover the story, vision and mission.",
+  // },
   // {
   //   name: "Sitemap",
   //   desc: "Discover the story, vision and mission.",
@@ -56,22 +56,27 @@ const PagesListing = () => {
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
     const [pageData, SetPageData] = useState([
-  {
-    name: "Home",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "About Us",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "Services",
-    desc: "Discover the story, vision and mission.",
-  },
-  {
-    name: "FAQs",
-    desc: "Discover the story, vision and mission.",
-  }]);
+      // {
+      //   name: "Home",
+      //   desc: "Discover the story, vision and mission.",
+      // },
+      // {
+      //   name: "About Us",
+      //   desc: "Discover the story, vision and mission.",
+      // },
+      // {
+      //   name: "Services",
+      //   desc: "Discover the story, vision and mission.",
+      // },
+      // {
+      //   name: "FAQs",
+      //   desc: "Discover the story, vision and mission.",
+      // }
+    ]);
+    const handleChange = (values) => {
+      console.log(values);
+    };
+  const [loader, SetLoader] = useState(false);
     useEffect(() => {
       generateSitemap();
       // This code will run when the component is mounted
@@ -86,8 +91,9 @@ const PagesListing = () => {
     }, []);
   const generateSitemap = async (values: any) => {
     const categoryList = Industrydetails.industryCategory.split('-')
-    console.log(categoryList);
+    //console.log(categoryList);
     try{
+      SetLoader(true);
       const response = await fetch("/api/openai/sitemap", {
         method: "POST", // Use the appropriate HTTP method
         headers: {
@@ -103,30 +109,35 @@ const PagesListing = () => {
       });
       let PageList = await response.json();
       //console.log(PageList.data[0].content[0].text.value);
+      SetLoader(false);
       SetPageData(JSON.parse(PageList.data[0].content[0].text.value));
     } catch (error) {
         console.error("Error fetching data from API:", error);
     }
   }
-  // const handleCheckboxChange = (optionName: any) => {
-  //   const selectedPages = [...Industrydetails.selectedPages];
+  const handleCheckboxChange = (optionName: any, indexNumber: number) => {
+    const selectedPages = [...Industrydetails.selectedPages];
 
-  //   // Check if the option is already in the selectedPages array
-  //   const index = selectedPages.indexOf(optionName);
+    // Check if the option is already in the selectedPages array
+    const index = selectedPages.indexOf(optionName);
+    if (index !== -1) {
+      // If it is, remove it
+      selectedPages.splice(index, 1);
+    } else {
+      // If it's not, add it
+      selectedPages.push({
+        "pagename": optionName.name,
+        "index": indexNumber
+      });
+    }
 
-  //   if (index !== -1) {
-  //     // If it is, remove it
-  //     selectedPages.splice(index, 1);
-  //   } else {
-  //     // If it's not, add it
-  //     selectedPages.push(optionName);
-  //   }
-  //   // Update the Industrydetails state with the new selectedPages array
-  //   setIndustryDetails({
-  //     ...Industrydetails,
-  //     selectedPages,
-  //   });
-  // };
+    // Update the Industrydetails state with the new selectedPages array
+    setIndustryDetails({
+      ...Industrydetails,
+      selectedPages,
+    });
+    console.log(selectedPages);
+  };
   return (
     <div className="container">
       <div className="other-main-wrapper">
@@ -135,7 +146,7 @@ const PagesListing = () => {
           initialValues={Industrydetails}
           validate={validate}
           onSubmit={(values: any) => {
-            //console.log("values", values);
+            console.log(values);
             setIndustryDetails({
               ...Industrydetails,
               selectedPages: values.selectedPages,
@@ -144,16 +155,22 @@ const PagesListing = () => {
           }}
         >
           {({ handleSubmit, handleChange, values, setFieldValue }) => (
-            <form onSubmit={handleSubmit} className="">
+            <form onSubmit={handleSubmit} className="sitemap">
               <div className="title-dashboard text-center">
                 What do you want to add to your {""}
                 <span className="style-title">website</span>?
               </div>
 
               <div className="grid-class">
+                {pageData.length === 0 && (
+                  // <h5 className="sd">Loading details....</h5>
+                  <div class="cup">
+                    <div class="handle"></div>
+                  </div>
+                )}
                 {pageData.map((option, index) => (
                   <div key={option.name} className="custom-checkbox">
-                    <label htmlFor={`selectedPages ${index}`}>
+                    <label htmlFor={`selectedPages_${index}`}>
                       <div className="pages-listing_wrapper">
                         <div className="page_list_title">
                           <div className="left-page-Title">
@@ -170,14 +187,22 @@ const PagesListing = () => {
                               className="customCheckbox"
                               type="checkbox"
                               name={`selectedPages`}
-                              id={`selectedPages ${index}`}
+                              id={`selectedPages_${index}`}
+                              data-index={index}
                               value={option.name}
-                              checked={values.selectedPages.includes(
-                                option.name
+                              // checked={values.selectedPages.includes({
+                              //   "pagename": option.name,
+                              //   "index": index
+                              // })}
+                              checked={values.selectedPages.some(
+                                (selectedOption) =>
+                                  selectedOption.pagename == option.name &&
+                                  selectedOption.index == index
                               )}
-                              // onChange={() => handleCheckboxChange(option.name)}
-
-                              onChange={handleChange}
+                              onChange={() =>
+                                handleCheckboxChange(option, index)
+                              }
+                              //onChange={handleChange}
                               style={{ display: "none" }}
                             />
                             <div className="customCheckboxStyle"></div>
@@ -202,15 +227,21 @@ const PagesListing = () => {
                   className="btnprev btn"
                   onClick={() => {
                     if (Industrydetails.hasDomain === "no") {
-                      prev(5);
+                      prev(3);
                     } else {
-                      prev(4);
+                      prev(3);
                     }
                   }}
                 >
                   <a>Back</a>
                 </button>
-                <button className="btnnext btn" type="submit">
+                <button
+                  className="btnnext btn"
+                  type="submit"
+                  onClick={() => {
+                    prev(5);
+                  }}
+                >
                   <a>Next</a>
                 </button>
               </div>

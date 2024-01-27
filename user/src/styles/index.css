@@ -168,17 +168,20 @@ p {
   gap: 22px;
   position: relative;
 }
-.brandnameform {
+.brandnameform,
+.logoform {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
 }
 
-.brandnameform .input-group {
+.brandnameform .input-group,
+.logoform .input-group {
   /* align-items: center; */
   width: unset;
   /* Ensure the input group takes the full width */
+  align-self: center;
 }
 .brandnameform input {
   width: 510px;
@@ -197,8 +200,9 @@ p {
 .brandnameform input.form-control:focus {
   box-shadow: none;
 }
-.brandnameform .generatebtn {
-  margin-left: -68px;
+.brandnameform .generatebtn,
+.logoform .generatebtn {
+  /* margin-left: -68px; */
   border-radius: 34px;
   background: #ef5839;
   color: #fff;
@@ -221,6 +225,7 @@ p {
   grid-template-columns: 1fr 1fr 1fr;
   margin-top: 34px;
 }
+
 .brandName-List-wrapper .list:hover {
   border-radius: 8px;
   background-color: #f8f8f8;
@@ -540,6 +545,9 @@ p {
   padding: 8px 0;
   cursor: pointer;
 }
+.brandName-List-wrapper.single-grid .list {
+  grid-column: span 3;
+}
 .listing-domain-wrapper .domain_title {
   max-width: 250px;
   width: 100%;
@@ -563,4 +571,56 @@ p {
 .form-group:has(.zip) {
   width: 40%;
   display: inline-block;
+}
+
+
+.cup {
+  height: 140px;
+  width: 180px;
+  /* border: 6px solid #efb54a; */
+  border-radius: 0 0 70px 70px;
+  position: absolute;
+  position: relative;
+  top: 40%;
+  /* left: 40%; */
+  background: url(https://i.postimg.cc/8z5t32TG/coffee.png);
+  box-shadow: 0 0 0 5px #000000;
+  animation: fill 3s linear infinite;
+  background-repeat: repeat-x;
+  background-position: ;
+}
+.sitemap .cup{
+  margin: 0 auto;
+  grid-column: span 2;
+}
+@keyframes fill {
+  0% {
+    background-position: 0px 140px;
+  }
+
+  20% {
+    background-position: -450px 100px;
+  }
+
+  40% {
+    background-position: -900px 50px;
+  }
+
+  80% {
+    background-position: -1350px -40px;
+  }
+
+  100% {
+    background-position: 0px 140px;
+  }
+}
+
+.handle {
+  position: relative;
+  height: 70px;
+  width: 40px;
+  border: 6px solid #000000;
+  left: 180px;
+  top: 10px;
+  border-radius: 0 70px 70px 0;
 }

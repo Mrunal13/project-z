@@ -25,8 +25,8 @@ const WebsiteTemp = () => {
   //   selectedLayouts: Yup.array().min(1, "Select a layout").required(),
   // });
 
+  //console.log(Industrydetails);
   const [selectedPageOptions, setSelectedPageOptions] = useState(
-    layoutDetails?.selectedPages
   );
   const [primaryColor, setPrimaryColor] = useState(
     layoutDetails?.colorCodes[0].primaryColor
@@ -35,7 +35,12 @@ const WebsiteTemp = () => {
     layoutDetails?.colorCodes[0].secondaryColor
   );
   const [gradientColors, setGradientColors] = useState([]);
-
+  useEffect(() => {
+    setLayoutdetails((prevLayoutDetails: any) => ({
+      ...prevLayoutDetails,
+      selectedPages: Industrydetails.selectedPages,
+    }));
+  }, []);
   // const handleLayoutChange = (e: any, setFieldValue: any, values: any) => {
   //   const layoutId = e.target.value;
 
@@ -121,7 +126,7 @@ const WebsiteTemp = () => {
         >
           {({ setFieldValue, values, handleChange }) => (
             <Form className={s.formwrapper}>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Select Page </label>
                 <Select
                   isMulti
@@ -144,63 +149,19 @@ const WebsiteTemp = () => {
                   component="div"
                   className={s.error}
                 />
-              </div>
-              <div className="row">
-                <div className="col-md-6 col-sm-12">
-                  {/* <label>Choose Color Codes For the Webs:</label> */}
-                  <label>Select Webiste Primary Color</label>
-                  <div className="sketchpicker">
-                    <div
-                      style={{
-                        backgroundColor: `${primaryColor}`,
-                        width: 100,
-                        height: 50,
-                        border: "2px solid white",
-                      }}
-                    ></div>
-                    {/* Sketch Picker from react-color and handling color on onChange event ||  for the primary color */}
-                    <SketchPicker
-                      disableAlpha={false}
-                      color={primaryColor}
-                      onChange={(color) => handlePrimaryColor(color)}
-                    />
-                  </div>
-                </div>
-                <div className="blockpicker col-md-6 col-sm-12">
-                  {/* <label>Choose Color Codes For the Webs:</label> */}
-                  <label>Select Webiste Secondary Color</label>
-                  {/* Div to display the color  */}
-                  <div className="sketchpicker">
-                    {/* Div to display the color  */}
-                    <div
-                      style={{
-                        backgroundColor: `${secondaryColor}`,
-                        width: 100,
-                        height: 50,
-                        border: "2px solid white",
-                      }}
-                    ></div>
-                    {/* Sketch Picker from react-color and handling color on onChange event  || for secondary color */}
-                    <SketchPicker
-                      color={secondaryColor}
-                      onChange={handleSecondaryColor}
-                    />
-                  </div>
-                </div>
-              </div>
-
+              </div> */}
               {layoutDetails?.selectedPages &&
                 layoutDetails?.selectedPages.map(
                   (pagename: any, index: number) => {
                     return (
                       <React.Fragment key={index}>
-                        <h5 className="mt-5">{pagename.label}</h5>
+                        <h5 className="mt-5">{pagename.pagename}</h5>
                         <GradientBoxes
-                          key={pagename.label}
+                          key={index}
                           primaryColor={primaryColor}
                           secondaryColor={secondaryColor}
-                          pageName={pagename.value}
-                          pageId={pagename.id}
+                          pageName={pagename.pagename}
+                          pageId={index}
                           values={values}
                           setFieldValue={setFieldValue}
                           // onColorSelect={(color, id) =>

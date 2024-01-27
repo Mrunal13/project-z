@@ -14,7 +14,7 @@ const Listing = ({
   setSelectedBrand,
   setSelectedDomain,
 }: any) => {
-  //console.log("data", data);
+  //console.log("data", data.length);
   const { next, prev, Industrydetails, setIndustryDetails }: any =
     useContext(MultiStepFormContext);
   const [currentPopover, setCurrentPopover] = useState(null);
@@ -42,10 +42,11 @@ const Listing = ({
   );
   return (
     <>
-      <div className="title-dashboard mt-4 text-center">
-        Best Name <span className="style-title "> suggestions</span>
-      </div>
-      <div className="brandName-List-wrapper">
+      <div
+        className={`brandName-List-wrapper ${
+          data.length > 1 ? "multi-grid" : "single-grid"
+        }`}
+      >
         {data.length ? (
           data?.map((list: any, index: any) => {
             const brandName = Object.keys(list)[0];
@@ -73,17 +74,22 @@ const Listing = ({
                     <div className="grid-class ps-4 pe-4">
                       {domains.map((domain: any, index: any) => (
                         <div
+                          key={domain.domain}
                           className={`listing-domain-wrapper ${
                             domain.available ? "active" : "inactive"
                           }`}
-                          onClick={() => {
+                          onClick={(e) => {
                             const element = document.querySelector(
                               ".listing-domain-wrapper"
                             );
+                            // console.log(
+                            //   e.currentTarget.classList.contains("active")
+                            // );
                             if (
                               element &&
-                              element.classList.contains("active")
+                              e.currentTarget.classList.contains("active")
                             ) {
+                              console.log("click if");
                               handleDomainSelect(brandName, domain.domain);
                             }
                           }}
@@ -154,7 +160,7 @@ const Listing = ({
             );
           })
         ) : (
-          <p>Loading.........</p>
+          <p></p>
         )}
       </div>
       {/* {BrandNameobj && (

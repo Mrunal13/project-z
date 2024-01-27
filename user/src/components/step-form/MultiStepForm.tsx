@@ -24,7 +24,7 @@ const IndustrydetailsInitialState = {
   industryCategory: "",
   industry: "",
   business: "",
-  hasBrandName: "",
+  hasBrandName: "no",
   brandName: "",
   brandNameSearchtext: "",
   brandNameSearchResults: [],
@@ -32,7 +32,7 @@ const IndustrydetailsInitialState = {
   brandLogoIcon: "",
   brandLogoImportUrl: "url",
   brandLogoSearchOptions: [], //array of search results
-  hasDomain: "",
+  hasDomain: "no",
   domainName: "",
   domainNameSearchtext: "",
   domainNameSearchResults: [],
@@ -221,24 +221,32 @@ const MultiStepForm = () => {
             <PagesListing />
           </>
         );
-      case 7:
+      case 5:
         return (
           <>
             <Logo />
             <ColorPalette />
           </>
         );
-      case 8:
+      case 6:
         return (
           <>
             <Logo />
             <PersonalDetails />
           </>
         );
+      case 7:
+        return (
+          <>
+            <Logo showDefault={false} />
+            <WebsiteTemp />
+          </>
+        );
       default:
         <>
           <Logo showDefault={false} />
-        </>
+           
+        </>;
         // return null;
     }
   };

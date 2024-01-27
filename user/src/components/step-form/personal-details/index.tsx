@@ -198,12 +198,17 @@ const PersonalDetails = () => {
                     <button
                       className="btnprev btn"
                       onClick={() => {
-                        prev(7);
+                        prev(5);
                       }}
                     >
                       <a>Back</a>
                     </button>
-                    <button className="btnnext btn">
+                    <button
+                      className="btnnext btn"
+                      onClick={() => {
+                        next(7);
+                      }}
+                    >
                       <a>Next</a>
                     </button>
                   </div>
