@@ -1,8 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import s from "./multiplestep.module.css";
 import MultiStepFormContext from "@/provider/MultiStepForm";
 import * as Yup from "yup";
+import SvgLogo from "./svg-logo";
+
 
 const validationSchema = Yup.object().shape({
   includeImage: Yup.string().required(
@@ -16,7 +18,9 @@ const validationSchema = Yup.object().shape({
   }),
 });
 
+
 const GenerateLogo = () => {
+  const childRef = useRef(0);
   const {
     Industrydetails,
     setIndustryDetails,
@@ -25,9 +29,13 @@ const GenerateLogo = () => {
     logo,
     setLogo,
   }: any = useContext(MultiStepFormContext);
+  const canvasRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loader,setLoader] = useState(false);
+  const [count, setCount] = useState(0);
+  const [activeElement, setActiveElement] = useState(null);
   // handle click for the upload  image
+
   const handleImageChange = (e: any, formikProps: any) => {
     const file = e.target.files[0];
 
@@ -38,14 +46,57 @@ const GenerateLogo = () => {
   };
 
   // handle Submit the upload logo form
-  const handleSelectLogo = (values: any) => {
+  const handleSelectLogo = async (values: any) => {
     // setLogo(values);
-    next(4);
+    try {
+      let svgImage = '';
+      document
+        .querySelectorAll(".listing-domain-wrapper.logo.selected svg")
+        .forEach((el) => {
+          const canvas = canvasRef.current;
+
+          //svgImage = "data:image/svg+xml;base64," + btoa(el);
+          //svgImage = btoa(el);
+          const s = new XMLSerializer();
+          const str = s.serializeToString(el);
+          svgImage = str;
+          //console.log(str);
+        });
+      const response = await fetch("/api/image-generate", {
+        method: "POST", // Use the appropriate HTTP method
+        headers: {
+          "Content-Type": "application/json", // Specify content type as JSON
+        },
+        body: JSON.stringify({ data: svgImage }), // Convert data to JSON string
+      });
+      const data = await response.json();
+      if (data.uniqueFileName) {
+        setIndustryDetails((prevdata: any) => ({
+          ...prevdata,
+          hasBrandLogo: "yes",
+          brandLogoImportUrl:
+            window.location.origin + "/uploads/" + data.uniqueFileName,
+        }));
+      }
+      next(4);
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
   };
+  const handleLogoSelection = async(e) => {
+    //console.log(e.currentTarget);
+    document.querySelectorAll(".listing-domain-wrapper.logo").forEach((el) => {
+      el.classList.remove("selected");
+    });
+
+    e.currentTarget.classList.add("selected");
+  }
   const generateNewLogo = async (values: any) => {
+    //console.log('ss');
+    //setCount(23);
     try {
       SetLoader(true);
-      console.log(Industrydetails);
+      //console.log(Industrydetails);
       //Domain API
       datas = [
         {
@@ -54,15 +105,17 @@ const GenerateLogo = () => {
           description: "Domain Available",
         },
       ];
-      const response = await fetch("/api/openai/logo", {
-        method: "POST", // Use the appropriate HTTP method
-        headers: {
-          "Content-Type": "application/json", // Specify content type as JSON
-        },
-        body: JSON.stringify({ data: datas }), // Convert data to JSON string
-      });
-      const data = await response.json();
-      
+      // const response = await fetch("/api/openai/logo", {
+      //   method: "POST", // Use the appropriate HTTP method
+      //   headers: {
+      //     "Content-Type": "application/json", // Specify content type as JSON
+      //   },
+      //   body: JSON.stringify({ data: datas }), // Convert data to JSON string
+      // });
+      //const data = await response.json();
+      //setReload(reload++);
+      //console.log(Math.floor(Math.random()).toString(4));
+      setReload(Math.floor(Math.random()).toString(4));
       SetLoader(false);
       //SetNameSerch(values.brandNameSearchtext);
       setIndustryDetails((prevdata: any) => ({
@@ -77,24 +130,107 @@ const GenerateLogo = () => {
       //console.error("Error fetching data from API:", error);
     }
   }
+  
   return (
     <div className="container">
       <div className="popup-container other-main-wrapper logoform">
         {/* <Title title={`Let’s Create a Unique Logo For Your Brand!`} /> */}
         <div className="title-dashboard">
-          Let’s Create a Unique <span className="style-title">Logo</span> For
+          Let’s Select a Unique <span className="style-title">Logo</span> For
           Your Brand!
         </div>
         <div className="input-group">
-          <div className="input-group-append">
+          {/* <div className="input-group-append">
             <button
               type="button"
               className="input-group-text generatebtn"
               id="basic-addon2"
-              onClick={() => generateNewLogo(values)}
+              onClick={() => setCount(count + 1)}
             >
               Generate
             </button>
+          </div> */}
+        </div>
+        <div className="grid-class ps-4 pe-4">
+          <div
+            className="listing-domain-wrapper logo"
+            onClick={(e) => {
+              handleLogoSelection(e);
+            }}
+          >
+            <SvgLogo
+              //count={count}
+              logoText={Industrydetails.brandName}
+              // logoColor1={Math.floor(Math.random() * 16777215).toString(16)}
+              // logoColor2={Math.floor(Math.random() * 16777215).toString(16)}
+              // fontSelection={Math.floor(Math.random() * (1595 - 0 + 1)) + 0}
+            />
+          </div>
+          <div
+            className="listing-domain-wrapper logo"
+            onClick={(e) => {
+              handleLogoSelection(e);
+            }}
+          >
+            <SvgLogo
+              count={count}
+              logoText={Industrydetails.brandName}
+              // logoColor1={Math.floor(Math.random() * 16777215).toString(16)}
+              // logoColor2={Math.floor(Math.random() * 16777215).toString(16)}
+              // fontSelection={Math.floor(Math.random() * (1595 - 0 + 1)) + 0}
+            />
+          </div>
+          <div
+            className="listing-domain-wrapper logo"
+            onClick={(e) => {
+              handleLogoSelection(e);
+            }}
+          >
+            <SvgLogo
+              logoText={Industrydetails.brandName}
+              // logoColor1={Math.floor(Math.random() * 16777215).toString(16)}
+              // logoColor2={Math.floor(Math.random() * 16777215).toString(16)}
+              // fontSelection={Math.floor(Math.random() * (1595 - 0 + 1)) + 0}
+            />
+          </div>
+          <div
+            className="listing-domain-wrapper logo"
+            onClick={(e) => {
+              handleLogoSelection(e);
+            }}
+          >
+            <SvgLogo
+              logoText={Industrydetails.brandName}
+              // logoColor1={Math.floor(Math.random() * 16777215).toString(16)}
+              // logoColor2={Math.floor(Math.random() * 16777215).toString(16)}
+              // fontSelection={Math.floor(Math.random() * (1595 - 0 + 1)) + 0}
+            />
+          </div>
+          <div
+            className="listing-domain-wrapper logo"
+            onClick={(e) => {
+              handleLogoSelection(e);
+            }}
+          >
+            <SvgLogo
+              logoText={Industrydetails.brandName}
+              // logoColor1={Math.floor(Math.random() * 16777215).toString(16)}
+              // logoColor2={Math.floor(Math.random() * 16777215).toString(16)}
+              // fontSelection={Math.floor(Math.random() * (1595 - 0 + 1)) + 0}
+            />
+          </div>
+          <div
+            className="listing-domain-wrapper logo"
+            onClick={(e) => {
+              handleLogoSelection(e);
+            }}
+          >
+            <SvgLogo
+              logoText={Industrydetails.brandName}
+              // logoColor1={Math.floor(Math.random() * 16777215).toString(16)}
+              // logoColor2={Math.floor(Math.random() * 16777215).toString(16)}
+              // fontSelection={Math.floor(Math.random() * (1595 - 0 + 1)) + 0}
+            />
           </div>
         </div>
         <div>
@@ -109,7 +245,7 @@ const GenerateLogo = () => {
             className="btnprev btn"
             onClick={() => {
               //if (Industrydetails.hasBrandLogo === "no") {
-                prev(2);
+              prev(2);
               //}
             }}
           >
@@ -147,4 +283,5 @@ const GenerateLogo = () => {
     </div>
   );
 };
+
 export default GenerateLogo;

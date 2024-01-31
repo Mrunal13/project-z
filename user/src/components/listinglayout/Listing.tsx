@@ -89,7 +89,7 @@ const Listing = ({
                               element &&
                               e.currentTarget.classList.contains("active")
                             ) {
-                              console.log("click if");
+                              //console.log("click if");
                               handleDomainSelect(brandName, domain.domain);
                             }
                           }}

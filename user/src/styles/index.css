@@ -391,7 +391,7 @@ p {
 /* website pages css */
 .grid-class {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr; */
   grid-template-columns: 1fr 1fr;
   gap: 30px 42px;
   gap: 10px 15px;
@@ -544,6 +544,12 @@ p {
   border-bottom: 1px solid #e2e4e5;
   padding: 8px 0;
   cursor: pointer;
+}
+.listing-domain-wrapper.logo {
+  border: 1px solid #e2e4e5;
+}
+.listing-domain-wrapper.logo.selected {
+  border-color: #ef5839;
 }
 .brandName-List-wrapper.single-grid .list {
   grid-column: span 3;
