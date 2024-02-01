@@ -171,8 +171,8 @@ const MultiStepForm = () => {
             {category && (
               <>
                 <Logo />
-                {/* <GenerateLogo /> */}
-                <Industry />
+                <GenerateLogo />
+                {/* <Industry /> */}
                 {/* <GrapesJSEditor /> */}
               </>
             )}

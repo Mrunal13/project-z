@@ -19,7 +19,7 @@ function Text(props) {
 
 const SvgLogo = (props) => {
     //console.log(props);
-    const logoText = props.logoText?? "Skyward Digital";
+    const logoText = props.logoText ? props.logoText  : "Skyward Digital";
     const fontSize = Math.min(200 / (logoText.length * 0.6), 16);
     const fontSelection =
       props.fontSelection ?? Math.floor(Math.random() * (1595 - 0 + 1)) + 0;
